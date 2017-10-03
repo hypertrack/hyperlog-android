@@ -3,6 +3,7 @@ package com.hypertrack.devicelogger.db;
 import android.content.Context;
 import android.os.Build;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -13,8 +14,11 @@ import com.hypertrack.devicelogger.db.Utils.DateTimeUtility;
 import com.hypertrack.devicelogger.db.Utils.Utils;
 import com.hypertrack.devicelogger.db.Utils.VolleyUtils;
 
+import org.json.JSONArray;
+
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -24,34 +28,52 @@ public class SmartLog {
 
     private static final String TAG = "SmartLog";
     private static int logLevel = Log.WARN;
-    private static Context mContext;
     private static DeviceLogList mDeviceLogList;
     private static String URL;
+    private static String deviceUUID;
+    private static final int EXPIRY_TIME = 7 * 24 * 60 * 60;// 7 Days
 
     /**
      * Call this method to initialize SmartLog.
+     * By default, seven days older logs will gets deleted automatically.
+     *
+     * @param context The current context.
+     * @see #initialize(Context, int)
      */
-    public static void initialize(Context context) {
-        mContext = context.getApplicationContext();
+    public static void initialize(@NonNull Context context) {
+        initialize(context, EXPIRY_TIME);
+    }
 
+    /**
+     * Call this method to initialize SmartLog.
+     * By default, seven days older logs will get expire automatically. You can change the expiry period of logs by defining expiryTimeInSeconds.
+     *
+     * @param context             The current context.
+     * @param expiryTimeInSeconds Expiry time for logs in seconds.
+     * @see #initialize(Context)
+     */
+    public static void initialize(@NonNull Context context, int expiryTimeInSeconds) {
+        if (context == null)
+            throw new IllegalArgumentException("Context cannot be null.");
+
+        Context mContext = context.getApplicationContext();
+        deviceUUID = Settings.Secure.getString(mContext.getContentResolver(), Settings.Secure.ANDROID_ID);
         if (mDeviceLogList == null) {
             synchronized (SmartLog.class) {
                 if (mDeviceLogList == null) {
                     DeviceLogDataSource logDataSource = DeviceLogDatabaseHelper.getInstance(context);
                     mDeviceLogList = new DeviceLogList(logDataSource);
+                    mDeviceLogList.clearOldLogs(EXPIRY_TIME);
                 }
             }
         }
     }
 
     private static boolean isInitialize() {
-        if (mContext == null) {
+        if (mDeviceLogList == null) {
             SmartLog.e(TAG, "Smart Log isn't initialized.");
             return false;
         }
-
-        if (mDeviceLogList == null)
-            initialize(mContext);
 
         return true;
     }
@@ -62,6 +84,8 @@ public class SmartLog {
      * @param url URL of the endpoint
      */
     public static void setURL(String url) {
+        if (TextUtils.isEmpty(url))
+            throw new IllegalArgumentException("API URL cannot be null or empty");
         URL = url;
     }
 
@@ -188,17 +212,11 @@ public class SmartLog {
         String senderName = BuildConfig.VERSION_NAME;
         String osVersion = "Android-" + Build.VERSION.RELEASE;
 
-        String deviceUUID = "";
-
-        if (mContext != null) {
-            deviceUUID = Settings.Secure.getString(mContext.getContentResolver(), Settings.Secure.ANDROID_ID);
-        }
-
         if (deviceUUID == null) {
             deviceUUID = "DeviceUUID";
         }
 
-        return timeStamp + " " + senderName + " : " + osVersion + " | " + deviceUUID + " | ";
+        return timeStamp + " " + senderName + " : " + osVersion + " | " + deviceUUID + " | " + "SmartLog " + " | ";
     }
 
     private static void r(final String message) {
@@ -260,27 +278,39 @@ public class SmartLog {
         return getDeviceLogs(true);
     }
 
-    private static List<DeviceLog> getDeviceLogs(boolean deleteLogs) {
+    /**
+     * Call this method to get a list of stored Device Logs
+     *
+     * @param deleteLogs If true then logs will delete from the device.
+     * @return List of {@link DeviceLog}
+     */
+    public static List<DeviceLog> getDeviceLogs(boolean deleteLogs) {
+        return getDeviceLogs(deleteLogs, 1);
+    }
+
+    /**
+     * Call this method to get a list of stored Device Logs.
+     *
+     * @param deleteLogs If true then logs will delete from the device.
+     * @param batchNo    If there are more than one batch of device log then specify the batch number.
+     *                   Batch number should be greater than or equal to 1.
+     * @return List of {@link DeviceLog} or empty list if batch number is greater than the {@link SmartLog#getDeviceLogBatchCount()}
+     */
+    public static List<DeviceLog> getDeviceLogs(boolean deleteLogs, int batchNo) {
         if (!isInitialize())
             return null;
 
-        List<DeviceLog> deviceLogs = new ArrayList<>();
+        List<DeviceLog> deviceLogs = mDeviceLogList.getDeviceLogs(batchNo);
+        if (deleteLogs) {
+            mDeviceLogList.clearDeviceLogs(deviceLogs);
+        }
 
-        long count;
-
-        do {
-            List<DeviceLog> temp = mDeviceLogList.getDeviceLogs();
-            deviceLogs.addAll(temp);
-            if (deleteLogs)
-                mDeviceLogList.clearDeviceLogs(temp);
-            count = mDeviceLogList.count();
-        } while (count > 5000 && deleteLogs);
         return deviceLogs;
     }
 
     /**
      * Call this method to get a list of stored Device Logs.
-     * Device logs will delete from device after fetching.
+     * Device logs will gets deleted from device after fetching.
      *
      * @return List of {@link String}
      */
@@ -291,10 +321,11 @@ public class SmartLog {
     /**
      * Call this method to get a list of stored Device Logs
      *
-     * @param deleteLogs If true then delete the logs from the device.
-     * @return List of {@link String}
+     * @param deleteLogs If true then logs will delete from the device.
+     * @param batchNo    If there are more than one batch of device log then specify the batch number. Batch number should be greater than or equal to 1.
+     * @return List of {@link String} or If batch number is greater than the {@link SmartLog#getDeviceLogBatchCount()} then returns empty list;
      */
-    public static List<String> getDeviceLogsAsStringList(boolean deleteLogs) {
+    public static List<String> getDeviceLogsAsStringList(boolean deleteLogs, int batchNo) {
         List<String> logsList = new ArrayList<>();
         if (!isInitialize())
             return logsList;
@@ -303,19 +334,17 @@ public class SmartLog {
             return logsList;
         }
 
-        List<DeviceLog> deviceLogList = new ArrayList<>();
+        return getDeviceLogsAsStringList(getDeviceLogs(deleteLogs, batchNo));
+    }
 
-        long count;
-
-        do {
-            List<DeviceLog> temp = mDeviceLogList.getDeviceLogs();
-            deviceLogList.addAll(temp);
-            if (deleteLogs)
-                mDeviceLogList.clearDeviceLogs(temp);
-            count = mDeviceLogList.count();
-        } while (count > 5000 && deleteLogs);
-        return getDeviceLogsAsStringList(deviceLogList);
-
+    /**
+     * Call this method to get a list of stored Device Logs
+     *
+     * @param deleteLogs If true then logs will delete from the device.
+     * @return List of {@link String}
+     */
+    public static List<String> getDeviceLogsAsStringList(boolean deleteLogs) {
+        return getDeviceLogsAsStringList(deleteLogs, 1);
     }
 
     /**
@@ -342,10 +371,11 @@ public class SmartLog {
      * Call this method to get a stored Device Logs as a File object.
      * A text file will create in the app folder containing all logs.
      *
+     * @param mContext The current context.
      * @param fileName Name of the file and no need to provide the file extension
      * @return {@link File} object, or {@code null if there is not any logs in device.
      */
-    public static File getDeviceLogsInFile(String fileName) {
+    public static File getDeviceLogsInFile(Context mContext, String fileName) {
 
         if (!isInitialize())
             return null;
@@ -367,10 +397,11 @@ public class SmartLog {
      * Call this method to get a stored Device Logs as a File object.
      * A text file will create in the app folder containing all logs with the current date time as name of the file.
      *
+     * @param mContext The current context.
      * @return {@link File} object
      */
-    public static File getDeviceLogsInFile() {
-        return getDeviceLogsInFile(null);
+    public static File getDeviceLogsInFile(Context mContext) {
+        return getDeviceLogsInFile(mContext, null);
     }
 
     /**
@@ -387,22 +418,91 @@ public class SmartLog {
     }
 
     /**
-     * Call this method to push logs from device to the server.
+     * Call this method to get the count of stored device logs.
+     *
+     * @return The number of device logs.
      */
-    public static void pushLogs() {
-        pushLogs(null);
+    public static long logCount() {
+        if (!isInitialize())
+            return 0;
+
+        return mDeviceLogList.count();
+    }
+
+    /**
+     * Call this method to get number of device logs batches. Each batch contains the 5000 device logs.
+     *
+     * @return The number of device logs batches.
+     */
+    public static int getDeviceLogBatchCount() {
+        if (!isInitialize())
+            return 0;
+
+        return mDeviceLogList.getDeviceLogBatchCount();
+    }
+
+    /**
+     * Call this method to push logs from device to the server.
+     * <p>
+     * Logs will get delete from the device once it successfully push to the server.
+     * <p>
+     * If device log count is greater than {@link DeviceLogTable#DEVICE_LOG_REQUEST_QUERY_LIMIT} then
+     * log will push to the server in batches.
+     *
+     * @param mContext The current context.
+     */
+    public static void pushLogs(Context mContext) {
+        pushLogs(mContext, null, null);
     }
 
     /**
      * Call this method to push logs from device to the server with custom filename.
+     * <p>
      * Logs will get delete from the device once it successfully push to the server.
+     * <p>
+     * If device log count is greater than {@link DeviceLogTable#DEVICE_LOG_REQUEST_QUERY_LIMIT} then
+     * log will push to the server in batches.
      *
      * @param fileName Name of the file that you want to receive on your server.
+     * @param mContext The current context.
      */
-    public static void pushLogs(String fileName) {
+    public static void pushLogs(Context mContext, String fileName) {
+        pushLogs(mContext, fileName, null);
+    }
+
+    /**
+     * Call this method to push logs from device to the server.
+     * <p>
+     * Logs will get delete from the device once it successfully push to the server.
+     * <p>
+     * If device log count is greater than {@link DeviceLogTable#DEVICE_LOG_REQUEST_QUERY_LIMIT} then
+     * log will push to the server in batches.
+     *
+     * @param mContext The current context.
+     */
+    public static void pushLogs(Context mContext, HashMap<String, String> hashMap) {
+        pushLogs(mContext, null, hashMap);
+    }
+
+    /**
+     * Call this method to push logs from device to the server with custom filename.
+     * <p>
+     * Logs will get delete from the device once it successfully push to the server.
+     * <p>
+     * If device log count is greater than {@link DeviceLogTable#DEVICE_LOG_REQUEST_QUERY_LIMIT} then
+     * log will push to the server in batches.
+     *
+     * @param fileName Name of the file that you want to receive on your server.
+     * @param mContext The current context.
+     */
+    public static void pushLogs(Context mContext, String fileName, HashMap<String, String> additionalHeaders) {
 
         if (!isInitialize())
             return;
+
+        if (TextUtils.isEmpty(URL)) {
+            throw new RuntimeException("API endpoint URL is missing. Set URL using SmartLog.setURL method");
+        }
 
         VolleyUtils.cancelPendingRequests(mContext, TAG);
 
@@ -413,28 +513,36 @@ public class SmartLog {
         if (!hasPendingDeviceLogs())
             return;
 
-        final List<DeviceLog> deviceLogs = getDeviceLogs(false);
+        int logsBatchCount = getDeviceLogBatchCount();
 
-        byte[] bytes = Utils.getByteData(getDeviceLogsAsStringList(deviceLogs));
+        while (logsBatchCount != 0) {
 
-        if (TextUtils.isEmpty(fileName)) {
-            fileName = DateTimeUtility.getCurrentTime() + ".txt";
+            final List<DeviceLog> deviceLogs = getDeviceLogs(false);
+
+            byte[] bytes = Utils.getByteData(getDeviceLogsAsStringList(deviceLogs));
+
+            if (TextUtils.isEmpty(fileName)) {
+                fileName = DateTimeUtility.getCurrentTime() + ".txt";
+            }
+
+            HTTPMultiPartPostRequest httpMultiPartPostRequest = new HTTPMultiPartPostRequest<>(URL, bytes,
+                    fileName, additionalHeaders, mContext, JSONArray.class, new Response.Listener<JSONArray>() {
+                @Override
+                public void onResponse(JSONArray response) {
+                    mDeviceLogList.clearDeviceLogs(deviceLogs);
+                    SmartLog.i(TAG, "Log has been pushed");
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    error.printStackTrace();
+                    SmartLog.e(TAG, "Error has occured while log pushing.");
+                }
+            });
+
+            VolleyUtils.addToRequestQueue(mContext, httpMultiPartPostRequest, TAG);
+            logsBatchCount--;
         }
-
-        HTTPMultiPartPostRequest httpMultiPartPostRequest = new HTTPMultiPartPostRequest<String>(URL, bytes,
-                fileName, mContext, String.class, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                mDeviceLogList.clearDeviceLogs(deviceLogs);
-                SmartLog.i(TAG, "Log has been pushed");
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                SmartLog.e(TAG, "Error has occured while log pushing.");
-            }
-        });
-        VolleyUtils.addToRequestQueue(mContext, httpMultiPartPostRequest, TAG);
     }
 
     /**
@@ -446,28 +554,4 @@ public class SmartLog {
 
         mDeviceLogList.clearSavedDeviceLogs();
     }
-
-    /**
-     * Call this method to schedule log push smartly. SmartLog will push logs from device to server
-     * when device is connected to internet.
-     */
-
-   /* public static void scheduleLogPush() {
-        if (!isInitialize())
-            return;
-        // Create a new dispatcher using the Google Play driver.
-        FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(mContext));
-        Job myJob = dispatcher.newJobBuilder()
-                .setService(SmartLogService.class) // the JobService that will be called
-                .setTag(SmartLogConstants.POST_DEVICE_LOG_TAG)
-                .setLifetime(Lifetime.FOREVER)
-                .setReplaceCurrent(true)
-                .setRetryStrategy(RetryStrategy.DEFAULT_EXPONENTIAL)
-                .setRecurring(true)
-                .addConstraint(SmartLogConstants.ON_ANY_NETWORK)
-                .build();
-
-        dispatcher.mustSchedule(myJob);
-    }*/
-
 }

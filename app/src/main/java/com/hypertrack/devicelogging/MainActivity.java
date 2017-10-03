@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.facebook.stetho.Stetho;
 import com.hypertrack.devicelogger.db.SmartLog;
 
 import java.io.File;
@@ -23,24 +24,32 @@ public class MainActivity extends AppCompatActivity {
     ListView listView;
     List<String> logsList = new ArrayList<>();
     ArrayAdapter listAdapter;
+    int batchNumber = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        SmartLog.initialize(this);
+        SmartLog.initialize(this );
         SmartLog.setLogLevel(Log.VERBOSE);
+        Stetho.initialize(
+                Stetho.newInitializerBuilder(this)
+                        .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
+                        .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(this))
+                        .build());
+        SmartLog.setURL("https://api.hypertrack.com/api/v1/" + "logs_file/");
         editText = (EditText) findViewById(R.id.logText);
         listView = (ListView) findViewById(R.id.listView);
         logsList.add("Test");
-        listAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, logsList);
+        listAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, logsList);
         listView.setAdapter(listAdapter);
     }
 
     public void showLogs(View view) {
         logsList.clear();
         logsList.addAll(SmartLog.getDeviceLogsAsStringList(false));
-            listAdapter.notifyDataSetChanged();
+        listAdapter.notifyDataSetChanged();
+        batchNumber = 1;
     }
 
     public void addLog(View view) {
@@ -50,12 +59,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void getFile(View view) {
-        File file = SmartLog.getDeviceLogsInFile();
+        File file = SmartLog.getDeviceLogsInFile(this);
         if (file != null && file.exists())
             Toast.makeText(this, file.getAbsolutePath(), Toast.LENGTH_SHORT).show();
     }
 
     public void deleteLogs(View view) {
         SmartLog.deleteLogs();
+    }
+
+    public void nextLog(View view) {
+        logsList.clear();
+        logsList.addAll(SmartLog.getDeviceLogsAsStringList(false, ++batchNumber));
+        listAdapter.notifyDataSetChanged();
+    }
+
+    public void pushLog(View view) {
+        SmartLog.pushLogs(this);
     }
 }

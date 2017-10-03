@@ -13,7 +13,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
-        android:hint="Add Log"
+        android:hint="@string/enter_log"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -26,7 +26,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:onClick="addLog"
-        android:text="Add Log"
+        android:text="@string/add_log"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/logText" />
 
@@ -38,7 +38,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
         android:onClick="showLogs"
-        android:text="Show Logs"
+        android:text="@string/show_logs"
         app:layout_constraintLeft_toRightOf="@+id/button"
         app:layout_constraintRight_toLeftOf="@+id/button3"
         app:layout_constraintTop_toBottomOf="@+id/logText" />
@@ -47,33 +47,58 @@
         android:id="@+id/button3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginRight="0dp"
         android:layout_marginTop="8dp"
         android:onClick="getFile"
-        android:text="Get File"
-        app:layout_constraintTop_toBottomOf="@+id/logText"
+        android:text="@string/get_file"
         app:layout_constraintRight_toLeftOf="@+id/button4"
-        android:layout_marginRight="0dp" />
+        app:layout_constraintTop_toBottomOf="@+id/logText" />
+
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:onClick="deleteLogs"
+        android:text="@string/delete"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/logText" />
+
+    <Button
+        android:id="@+id/button5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="0dp"
+        android:onClick="nextLog"
+        android:text="@string/next_log"
+        app:layout_constraintRight_toLeftOf="@+id/button3"
+        app:layout_constraintTop_toBottomOf="@+id/button2"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Delete"
-        android:onClick="deleteLogs"
-        android:id="@+id/button4"
+        android:text="PUSH LOG"
+        app:layout_constraintLeft_toRightOf="@+id/button5"
+        android:layout_marginLeft="8dp"
+        android:onClick="pushLog"
         android:layout_marginRight="8dp"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/logText" />
+        android:layout_marginTop="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/button3" />
 
     <ListView
         android:id="@+id/listView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="23dp"
+        android:layout_marginTop="0dp"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button2" />
+        app:layout_constraintTop_toBottomOf="@+id/button5" />
 
 
 </android.support.constraint.ConstraintLayout>

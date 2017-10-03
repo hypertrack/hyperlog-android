@@ -5,17 +5,16 @@ import android.text.TextUtils;
 import java.util.List;
 
 /**
- * Created by piyush on 22/08/16.
+ * Created by Aman on 22/08/16.
  */
-/** package */
 class DeviceLogList {
     private DeviceLogDataSource mDeviceLogDataSource;
 
-    public DeviceLogList(DeviceLogDataSource mDeviceLogDataSource) {
+    DeviceLogList(DeviceLogDataSource mDeviceLogDataSource) {
         this.mDeviceLogDataSource = mDeviceLogDataSource;
     }
 
-    public void addDeviceLog(String deviceLog) {
+    void addDeviceLog(String deviceLog) {
         if (TextUtils.isEmpty(deviceLog)) {
             return;
         }
@@ -23,22 +22,30 @@ class DeviceLogList {
         this.mDeviceLogDataSource.addDeviceLog(deviceLog);
     }
 
-    public void clearSavedDeviceLogs() {
+    void clearSavedDeviceLogs() {
         this.mDeviceLogDataSource.deleteAllDeviceLogs();
     }
 
-    public List<DeviceLog> getDeviceLogs() {
-        return this.mDeviceLogDataSource.getDeviceLogs();
+    List<DeviceLog> getDeviceLogs(int batch) {
+        return this.mDeviceLogDataSource.getDeviceLogs(batch);
     }
 
-    public void clearDeviceLogs(List<DeviceLog> pushedDeviceLogs) {
+    void clearDeviceLogs(List<DeviceLog> pushedDeviceLogs) {
         if (pushedDeviceLogs == null || pushedDeviceLogs.isEmpty())
             return;
 
         this.mDeviceLogDataSource.deleteDeviceLog(pushedDeviceLogs);
     }
 
-    public long count() {
+    long count() {
         return this.mDeviceLogDataSource.getDeviceLogCount();
+    }
+
+    int getDeviceLogBatchCount(){
+        return this.mDeviceLogDataSource.getDeviceLogBatchCount();
+    }
+
+    void clearOldLogs(int expiryTime) {
+        mDeviceLogDataSource.clearOldLogs(expiryTime);
     }
 }

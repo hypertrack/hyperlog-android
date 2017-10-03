@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">DeviceLogging</string>
+    <string name="add_log">Add Log</string>
+    <string name="enter_log">Enter Log</string>
+    <string name="show_logs">Show Logs</string>
+    <string name="get_file">Get File</string>
+    <string name="delete">Delete</string>
+    <string name="next_log">Next Log</string>
 </resources>

@@ -6,7 +6,10 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 
+import com.hypertrack.devicelogger.db.Utils.DateTimeUtility;
+
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -32,7 +35,7 @@ class DeviceLogTable {
             + COLUMN_DEVICE_LOG + " TEXT"
             + ");";
 
-    public static void onCreate(SQLiteDatabase db) {
+    static void onCreate(SQLiteDatabase db) {
         if (db == null) {
             return;
         }
@@ -45,7 +48,7 @@ class DeviceLogTable {
         }
     }
 
-    public static void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    static void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if (db == null) {
             return;
         }
@@ -61,7 +64,7 @@ class DeviceLogTable {
         }
     }
 
-    public static long getCount(SQLiteDatabase db) {
+    static long getCount(SQLiteDatabase db) {
         try {
             if (db == null) {
                 return 0;
@@ -75,7 +78,22 @@ class DeviceLogTable {
         }
     }
 
-    public static void addDeviceLog(SQLiteDatabase db, String deviceLog) {
+    static int getDeviceLogBatchCount(SQLiteDatabase db) {
+        try {
+            if (db == null) {
+                return 0;
+            }
+
+            return (int) Math.ceil(getCount(db) / DEVICE_LOG_REQUEST_QUERY_LIMIT * 1.0f);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            SmartLog.e(TAG, "DeviceLogTable: Exception occurred while getDeviceLogBatchCount: " + e);
+            return 0;
+        }
+    }
+
+    static void addDeviceLog(SQLiteDatabase db, String deviceLog) {
         if (db == null || TextUtils.isEmpty(deviceLog)) {
             return;
         }
@@ -91,7 +109,7 @@ class DeviceLogTable {
         }
     }
 
-    public static void deleteDeviceLog(SQLiteDatabase db, List<DeviceLog> deviceLogList) {
+    static void deleteDeviceLog(SQLiteDatabase db, List<DeviceLog> deviceLogList) {
         if (db == null)
             return;
 
@@ -123,7 +141,7 @@ class DeviceLogTable {
         }
     }
 
-    public static void deleteAllDeviceLogs(SQLiteDatabase db) {
+    static void deleteAllDeviceLogs(SQLiteDatabase db) {
         if (db == null) {
             return;
         }
@@ -136,23 +154,30 @@ class DeviceLogTable {
         }
     }
 
-    public static List<DeviceLog> getDeviceLogs(SQLiteDatabase db) {
+    static List<DeviceLog> getDeviceLogs(SQLiteDatabase db, int batch) {
         if (db == null) {
             return null;
         }
 
-        Cursor cursor = db.query(TABLE_NAME, new String[]{COLUMN_ID, COLUMN_DEVICE_LOG}, null, null,
-                null, null, null, String.valueOf(DEVICE_LOG_REQUEST_QUERY_LIMIT));
-        if (cursor == null || cursor.isClosed()) {
-            return null;
+        int count = getDeviceLogBatchCount(db);
+        batch--;
+        if (count <= 1 || batch < 0) {
+            batch = 0;
         }
 
         ArrayList<DeviceLog> deviceLogList = null;
 
+        String limit = String.valueOf(batch * DEVICE_LOG_REQUEST_QUERY_LIMIT) + ", " + String.valueOf(DEVICE_LOG_REQUEST_QUERY_LIMIT);
+
+        Cursor cursor = db.query(TABLE_NAME, new String[]{COLUMN_ID, COLUMN_DEVICE_LOG}, null, null,
+                null, null, null, limit);
+
+        if (cursor == null || cursor.isClosed()) {
+            return null;
+        }
         try {
             if (cursor.moveToFirst()) {
                 deviceLogList = new ArrayList<>();
-
                 do {
                     if (cursor.isClosed()) {
                         break;
@@ -178,5 +203,21 @@ class DeviceLogTable {
         }
 
         return deviceLogList;
+    }
+
+    public static void clearOldLogs(SQLiteDatabase db, int expiryTime) {
+        if (db == null) {
+            return;
+        }
+
+        try {
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.SECOND, -expiryTime);
+            String date = DateTimeUtility.getFormattedTime(calendar.getTime());
+            db.delete(TABLE_NAME, COLUMN_DEVICE_LOG + "<?", new String[]{date});
+        } catch (Exception e) {
+            e.printStackTrace();
+            SmartLog.e(TAG, "DeviceLogTable: Exception occurred while deleteAllDeviceLogs: " + e);
+        }
     }
 }

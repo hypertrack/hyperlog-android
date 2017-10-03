@@ -43,11 +43,11 @@ class HTTPMultiPartPostRequest<T> extends Request<T> {
     private static final String HEADER_AUTHORIZATION = "Authorization";
     private static final String HEADER_ENCODING = "Content-Encoding";
     private static final String ENCODING_GZIP = "gzip";
-    private final String boundary = "SDK -" + System.currentTimeMillis();
+    private final String boundary = "SmartLog -" + System.currentTimeMillis();
 
     private boolean mGzipEnabled = false;
 
-    HTTPMultiPartPostRequest(String url, byte[] multiPartRequestBody, String filename, Context context,
+    HTTPMultiPartPostRequest(String url, byte[] multiPartRequestBody, String filename, HashMap<String,String> additionalHeaders, Context context,
                              Class<T> responseType, Response.Listener<T> listener, Response.ErrorListener errorListener) {
         super(Method.POST, url, errorListener);
         this.context = context;
@@ -56,7 +56,7 @@ class HTTPMultiPartPostRequest<T> extends Request<T> {
         this.mResponseType = responseType;
         this.mListener = listener;
         this.mGson = CustomGson.gson();
-        this.additionalHeaders = null;
+        this.additionalHeaders = additionalHeaders;
         packageName = context.getPackageName();
     }
 
@@ -133,8 +133,7 @@ class HTTPMultiPartPostRequest<T> extends Request<T> {
     public Map<String, String> getHeaders() throws AuthFailureError {
 
         Map<String, String> params = new HashMap<>();
-        params.put(HEADER_AUTHORIZATION, "Token " + (mToken != null ? mToken : ""));
-        params.put("User-Agent",context.getPackageName()+ " (Android " + Build.VERSION.RELEASE + ")");
+        params.put("User-Agent", context.getPackageName() + " (Android " + Build.VERSION.RELEASE + ")");
         params.put("Device-Time", DateTimeUtility.getCurrentTime());
         params.put("Device-ID", Utils.getDeviceId(context));
         params.put("App-ID", packageName);

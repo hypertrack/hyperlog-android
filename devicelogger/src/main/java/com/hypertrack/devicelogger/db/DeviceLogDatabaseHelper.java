@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by Aman on 20/09/17.
  */
-public class DeviceLogDatabaseHelper extends SQLiteOpenHelper implements DeviceLogDataSource {
+class DeviceLogDatabaseHelper extends SQLiteOpenHelper implements DeviceLogDataSource {
 
     private static final String TAG = DeviceLogDatabaseHelper.class.getSimpleName();
     private static final String DATABASE_NAME = "com.hypertrack.common.device_logs.db";
@@ -28,7 +28,7 @@ public class DeviceLogDatabaseHelper extends SQLiteOpenHelper implements DeviceL
             database = this.getWritableDatabase();
     }
 
-    public static DeviceLogDatabaseHelper getInstance(Context context) {
+    static DeviceLogDatabaseHelper getInstance(Context context) {
         if (deviceLogDatabaseHelper == null) {
             synchronized (DeviceLogDatabaseHelper.class) {
                 if (deviceLogDatabaseHelper == null)
@@ -83,17 +83,31 @@ public class DeviceLogDatabaseHelper extends SQLiteOpenHelper implements DeviceL
     }
 
     @Override
-    public List<DeviceLog> getDeviceLogs() {
+    public List<DeviceLog> getDeviceLogs(int batch) {
         // Initialize SQLiteDatabase if null
         initializeDatabase();
         List<DeviceLog> deviceLogList = null;
 
         try {
-            deviceLogList = DeviceLogTable.getDeviceLogs(database);
+            deviceLogList = DeviceLogTable.getDeviceLogs(database,batch);
         } catch (OutOfMemoryError | Exception e) {
             e.printStackTrace();
         }
 
         return deviceLogList;
+    }
+
+    @Override
+    public int getDeviceLogBatchCount() {
+        initializeDatabase();
+
+        return DeviceLogTable.getDeviceLogBatchCount(database);
+    }
+
+    @Override
+    public void clearOldLogs(int expiryTime) {
+        initializeDatabase();
+
+        DeviceLogTable.clearOldLogs(database,expiryTime);
     }
 }
