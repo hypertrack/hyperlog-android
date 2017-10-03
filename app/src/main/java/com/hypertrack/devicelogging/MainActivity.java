@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        SmartLog.initialize(this );
+        SmartLog.initialize(this,24*60*60);
         SmartLog.setLogLevel(Log.VERBOSE);
         Stetho.initialize(
                 Stetho.newInitializerBuilder(this)
