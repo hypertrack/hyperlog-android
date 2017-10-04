@@ -1,3 +1,28 @@
+
+/*
+The MIT License (MIT)
+
+Copyright (c) 2015-2017 HyperTrack (http://hypertrack.com)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+
 package com.hypertrack.devicelogger.db;
 
 import android.content.Context;
@@ -22,7 +47,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Created by Aman on 04/02/16.
+ * Created by Aman on 04/09/17.
  */
 public class SmartLog {
 
@@ -82,6 +107,7 @@ public class SmartLog {
      * Call this method to set a valid end point URL where logs need to be pushed.
      *
      * @param url URL of the endpoint
+     * @throws IllegalArgumentException if the url is empty or null
      */
     public static void setURL(String url) {
         if (TextUtils.isEmpty(url))
@@ -372,7 +398,7 @@ public class SmartLog {
      * A text file will create in the app folder containing all logs.
      *
      * @param mContext The current context.
-     * @param fileName Name of the file and no need to provide the file extension
+     * @param fileName Name of the file.
      * @return {@link File} object, or {@code null if there is not any logs in device.
      */
     public static File getDeviceLogsInFile(Context mContext, String fileName) {
@@ -389,6 +415,8 @@ public class SmartLog {
 
         if (stringList != null && !stringList.isEmpty()) {
             file = Utils.writeStringsToFile(mContext, stringList, fileName);
+            if (file != null)
+                SmartLog.i(TAG, "Log File has been created at " + file.getAbsolutePath());
         }
         return file;
     }
@@ -446,13 +474,15 @@ public class SmartLog {
      * <p>
      * Logs will get delete from the device once it successfully push to the server.
      * <p>
-     * If device log count is greater than {@link DeviceLogTable#DEVICE_LOG_REQUEST_QUERY_LIMIT} then
+     * If device log count is greater than {@value DeviceLogTable#DEVICE_LOG_REQUEST_QUERY_LIMIT} then
      * log will push to the server in batches.
      *
      * @param mContext The current context.
+     * @param callback Instance of {@link SmartLogCallback}.
+     * @throws IllegalArgumentException if the API endpoint url is empty or null
      */
-    public static void pushLogs(Context mContext) {
-        pushLogs(mContext, null, null);
+    public static void pushLogs(Context mContext, SmartLogCallback callback) {
+        pushLogs(mContext, null, null, callback);
     }
 
     /**
@@ -460,14 +490,16 @@ public class SmartLog {
      * <p>
      * Logs will get delete from the device once it successfully push to the server.
      * <p>
-     * If device log count is greater than {@link DeviceLogTable#DEVICE_LOG_REQUEST_QUERY_LIMIT} then
+     * If device log count is greater than {@value DeviceLogTable#DEVICE_LOG_REQUEST_QUERY_LIMIT} then
      * log will push to the server in batches.
      *
      * @param fileName Name of the file that you want to receive on your server.
      * @param mContext The current context.
+     * @param callback Instance of {@link SmartLogCallback}.
+     * @throws IllegalArgumentException if the API endpoint url is empty or null
      */
-    public static void pushLogs(Context mContext, String fileName) {
-        pushLogs(mContext, fileName, null);
+    public static void pushLogs(Context mContext, String fileName, SmartLogCallback callback) {
+        pushLogs(mContext, fileName, null, callback);
     }
 
     /**
@@ -475,13 +507,16 @@ public class SmartLog {
      * <p>
      * Logs will get delete from the device once it successfully push to the server.
      * <p>
-     * If device log count is greater than {@link DeviceLogTable#DEVICE_LOG_REQUEST_QUERY_LIMIT} then
+     * If device log count is greater than {@value DeviceLogTable#DEVICE_LOG_REQUEST_QUERY_LIMIT} then
      * log will push to the server in batches.
      *
-     * @param mContext The current context.
+     * @param mContext          The current context.
+     * @param additionalHeaders Additional Headers to pass along with request.
+     * @param callback          Instance of {@link SmartLogCallback}.
+     * @throws IllegalArgumentException if the API endpoint url is empty or null
      */
-    public static void pushLogs(Context mContext, HashMap<String, String> hashMap) {
-        pushLogs(mContext, null, hashMap);
+    public static void pushLogs(Context mContext, HashMap<String, String> additionalHeaders, SmartLogCallback callback) {
+        pushLogs(mContext, null, additionalHeaders, callback);
     }
 
     /**
@@ -489,19 +524,23 @@ public class SmartLog {
      * <p>
      * Logs will get delete from the device once it successfully push to the server.
      * <p>
-     * If device log count is greater than {@link DeviceLogTable#DEVICE_LOG_REQUEST_QUERY_LIMIT} then
+     * If device log count is greater than {@value DeviceLogTable#DEVICE_LOG_REQUEST_QUERY_LIMIT} then
      * log will push to the server in batches.
      *
-     * @param fileName Name of the file that you want to receive on your server.
-     * @param mContext The current context.
+     * @param fileName          Name of the file that you want to receive on your server.
+     * @param mContext          The current context.
+     * @param additionalHeaders Additional Headers to pass along with request.
+     * @param callback          Instance of {@link SmartLogCallback}.
+     * @throws IllegalArgumentException if the API endpoint url is empty or null
      */
-    public static void pushLogs(Context mContext, String fileName, HashMap<String, String> additionalHeaders) {
+    public static void pushLogs(Context mContext, String fileName, HashMap<String, String> additionalHeaders,
+                                final SmartLogCallback callback) {
 
         if (!isInitialize())
             return;
 
         if (TextUtils.isEmpty(URL)) {
-            throw new RuntimeException("API endpoint URL is missing. Set URL using SmartLog.setURL method");
+            throw new IllegalArgumentException("API endpoint URL is missing. Set URL using SmartLog.setURL method");
         }
 
         VolleyUtils.cancelPendingRequests(mContext, TAG);
@@ -513,13 +552,18 @@ public class SmartLog {
         if (!hasPendingDeviceLogs())
             return;
 
+        //Check how many batches of device logs are available to push
         int logsBatchCount = getDeviceLogBatchCount();
+
+        final int[] temp = {logsBatchCount};
+        final boolean[] isAllLogsPushed = {true};
 
         while (logsBatchCount != 0) {
 
             final List<DeviceLog> deviceLogs = getDeviceLogs(false);
 
-            byte[] bytes = Utils.getByteData(getDeviceLogsAsStringList(deviceLogs));
+            //Get string data into byte format.
+            byte[] bytes = Utils.getByteData(deviceLogs);
 
             if (TextUtils.isEmpty(fileName)) {
                 fileName = DateTimeUtility.getCurrentTime() + ".txt";
@@ -529,14 +573,32 @@ public class SmartLog {
                     fileName, additionalHeaders, mContext, JSONArray.class, new Response.Listener<JSONArray>() {
                 @Override
                 public void onResponse(JSONArray response) {
+                    temp[0]--;
                     mDeviceLogList.clearDeviceLogs(deviceLogs);
                     SmartLog.i(TAG, "Log has been pushed");
+
+                    if (callback != null && temp[0] == 0) {
+                        if (isAllLogsPushed[0]) {
+                            callback.onSuccess("All logs has been pushed");
+                        } else {
+                            callback.onError(new VolleyError("All logs hasn't been pushed"));
+                        }
+                    }
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
+
+                    isAllLogsPushed[0] = false;
+                    temp[0]--;
                     error.printStackTrace();
-                    SmartLog.e(TAG, "Error has occured while log pushing.");
+                    SmartLog.exception(TAG, "Error has occurred while pushing logs: ", error);
+
+                    if (temp[0] == 0) {
+                        if (callback != null) {
+                            callback.onError(error);
+                        }
+                    }
                 }
             });
 

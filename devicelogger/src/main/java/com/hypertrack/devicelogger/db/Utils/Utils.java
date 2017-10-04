@@ -1,8 +1,34 @@
+
+/*
+The MIT License (MIT)
+
+Copyright (c) 2015-2017 HyperTrack (http://hypertrack.com)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
 package com.hypertrack.devicelogger.db.Utils;
 
 import android.content.Context;
 import android.provider.Settings;
+import android.text.TextUtils;
 
+import com.hypertrack.devicelogger.db.DeviceLog;
 import com.hypertrack.devicelogger.db.SmartLog;
 
 import java.io.BufferedWriter;
@@ -24,18 +50,30 @@ public class Utils {
 
     public static File writeStringsToFile(Context context, List<String> data, String fileName) {
         try {
-            String dirPath = context.getExternalFilesDir(null).getAbsolutePath() + "/logsfile";
+            String dirPath = context.getExternalFilesDir(null).getAbsolutePath() + "/LogFiles";
 
+            if (TextUtils.isEmpty(dirPath)) {
+                SmartLog.e(TAG, "Error occurred while getting directory");
+                return null;
+            }
+
+            //Create a directory if doesn't exist.
             File filePath = new File(dirPath);
-            if (!filePath.exists())
-                filePath.mkdirs();
-
+            if (!filePath.exists()) {
+                if (!filePath.mkdirs()) {
+                    SmartLog.e(TAG, "Error occurred while creating file.");
+                    return null;
+                }
+            }
+            //Create a new file with file name
             File logFile = new File(filePath, fileName);
             FileWriter writer = new FileWriter(logFile);
             BufferedWriter bufferedWriter = new BufferedWriter(writer, 4 * (int) MEGA);
             write(data, bufferedWriter);
+
             return logFile;
-        } catch (IOException e) {
+
+        } catch (Exception e) {
             SmartLog.exception(TAG, e);
         }
         return null;
@@ -54,10 +92,10 @@ public class Utils {
         return device_uuid != null ? device_uuid : "";
     }
 
-    public static byte[] getByteData(List<String> records) {
+    public static byte[] getByteData(List<DeviceLog> deviceLogs) {
         StringBuilder stringBuilder = new StringBuilder();
-        for (String record : records) {
-            stringBuilder.append(record + "\n");
+        for (DeviceLog deviceLog : deviceLogs) {
+            stringBuilder.append(deviceLog.getDeviceLog()).append("\n");
         }
         return stringBuilder.toString().getBytes();
     }
