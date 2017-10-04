@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/DeviceLogging.iml" filepath="$PROJECT_DIR$/DeviceLogging.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/devicelogger/devicelogger.iml" filepath="$PROJECT_DIR$/devicelogger/devicelogger.iml" />
+    </modules>
+  </component>
+</project>
