@@ -1,9 +1,9 @@
 # Android Logging Library
 
-##Overview
+## Overview
 A utility logger library for Android on top of standard Android `Log` class. This is a simple library that will allow Android apps or library to store log into database so that developer can pull the logs from the database as `File` or push to their server.
 
-##Download
+## Download
 Download the latest version or grab via Gradle.
 
 The library is available on `mavenCentral()` and `jcenter()`. In your module's `build.gradle`, add the following code snippet and run the gradle-sync.
@@ -17,24 +17,24 @@ dependencies {
 }
 ```
 
-##Initialize
+## Initialize
 * Inside `onCreate` of Application class or Launcher Activity. 
 ```
 SmartLog.initialize(this);
 SmartLog.setLogLevel(Log.VERBOSE);
 ```
 
-##Usage
+## Usage
 ```
 SmartLog.d(TAG,"Test");
 ```
  
-##Get Logs in a File
+## Get Logs in a File
 ```
 File file = SmartLog.getDeviceLogsInFile(this);
 ```
 
-##Push Logs to Server
+## Push Logs to Server
 SmartLog will push logs to server in compressed form using GZIP compression.
 ```
 SmartLog.setURL("API URL");
@@ -51,7 +51,7 @@ SmartLog.pushLogs(this, new SmartLogCallback() {
 });
 ```
 
-##Additional Methods
+## Additional Methods
 * Different types of log.
 ```
 SmartLog.d(TAG,"debug");
