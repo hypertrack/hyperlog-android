@@ -1,6 +1,7 @@
 package com.hypertrack.devicelogging;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -10,8 +11,10 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.android.volley.VolleyError;
 import com.facebook.stetho.Stetho;
 import com.hypertrack.devicelogger.db.SmartLog;
+import com.hypertrack.devicelogger.db.SmartLogCallback;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -30,14 +33,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        SmartLog.initialize(this,24*60*60);
-        SmartLog.setLogLevel(Log.VERBOSE);
+
         Stetho.initialize(
                 Stetho.newInitializerBuilder(this)
                         .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
                         .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(this))
                         .build());
-        SmartLog.setURL("https://api.hypertrack.com/api/v1/" + "logs_file/");
+
         editText = (EditText) findViewById(R.id.logText);
         listView = (ListView) findViewById(R.id.listView);
         logsList.add("Test");
@@ -75,6 +77,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void pushLog(View view) {
-        SmartLog.pushLogs(this);
+
+        SmartLog.pushLogs(this, new SmartLogCallback() {
+            @Override
+            public void onSuccess(@NonNull String response) {
+                Log.d(TAG, "onSuccess: ");
+            }
+
+            @Override
+            public void onError(@NonNull VolleyError errorResponse) {
+                errorResponse.printStackTrace();
+                Log.e(TAG, "onError: ");
+            }
+        });
+
     }
 }

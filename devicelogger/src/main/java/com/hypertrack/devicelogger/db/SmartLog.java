@@ -348,6 +348,16 @@ public class SmartLog {
      * Call this method to get a list of stored Device Logs
      *
      * @param deleteLogs If true then logs will delete from the device.
+     * @return List of {@link String}
+     */
+    public static List<String> getDeviceLogsAsStringList(boolean deleteLogs) {
+        return getDeviceLogsAsStringList(deleteLogs, 1);
+    }
+
+    /**
+     * Call this method to get a list of stored Device Logs
+     *
+     * @param deleteLogs If true then logs will delete from the device.
      * @param batchNo    If there are more than one batch of device log then specify the batch number. Batch number should be greater than or equal to 1.
      * @return List of {@link String} or If batch number is greater than the {@link SmartLog#getDeviceLogBatchCount()} then returns empty list;
      */
@@ -361,16 +371,6 @@ public class SmartLog {
         }
 
         return getDeviceLogsAsStringList(getDeviceLogs(deleteLogs, batchNo));
-    }
-
-    /**
-     * Call this method to get a list of stored Device Logs
-     *
-     * @param deleteLogs If true then logs will delete from the device.
-     * @return List of {@link String}
-     */
-    public static List<String> getDeviceLogsAsStringList(boolean deleteLogs) {
-        return getDeviceLogsAsStringList(deleteLogs, 1);
     }
 
     /**
@@ -391,6 +391,17 @@ public class SmartLog {
         }
 
         return logsList;
+    }
+
+    /**
+     * Call this method to get a stored Device Logs as a File object.
+     * A text file will create in the app folder containing all logs with the current date time as name of the file.
+     *
+     * @param mContext The current context.
+     * @return {@link File} object
+     */
+    public static File getDeviceLogsInFile(Context mContext) {
+        return getDeviceLogsInFile(mContext, null);
     }
 
     /**
@@ -419,17 +430,6 @@ public class SmartLog {
                 SmartLog.i(TAG, "Log File has been created at " + file.getAbsolutePath());
         }
         return file;
-    }
-
-    /**
-     * Call this method to get a stored Device Logs as a File object.
-     * A text file will create in the app folder containing all logs with the current date time as name of the file.
-     *
-     * @param mContext The current context.
-     * @return {@link File} object
-     */
-    public static File getDeviceLogsInFile(Context mContext) {
-        return getDeviceLogsInFile(mContext, null);
     }
 
     /**

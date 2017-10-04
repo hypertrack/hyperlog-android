@@ -108,7 +108,7 @@ class DeviceLogTable {
                 return 0;
             }
 
-            return (int) Math.ceil(getCount(db) / DEVICE_LOG_REQUEST_QUERY_LIMIT * 1.0f);
+            return (int) Math.ceil(getCount(db) * 1.0f / DEVICE_LOG_REQUEST_QUERY_LIMIT);
 
         } catch (Exception e) {
             e.printStackTrace();
