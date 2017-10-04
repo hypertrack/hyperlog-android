@@ -69,7 +69,7 @@ class DeviceLogList {
         return this.mDeviceLogDataSource.getDeviceLogBatchCount();
     }
 
-    void clearOldLogs(int expiryTime) {
-        mDeviceLogDataSource.clearOldLogs(expiryTime);
+    void clearOldLogs(int expiryTimeInSeconds) {
+        mDeviceLogDataSource.clearOldLogs(expiryTimeInSeconds);
     }
 }

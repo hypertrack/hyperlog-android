@@ -229,16 +229,20 @@ class DeviceLogTable {
         return deviceLogList;
     }
 
-    public static void clearOldLogs(SQLiteDatabase db, int expiryTime) {
+    public static void clearOldLogs(SQLiteDatabase db, int expiryTimeInSeconds) {
         if (db == null) {
             return;
         }
 
         try {
             Calendar calendar = Calendar.getInstance();
-            calendar.add(Calendar.SECOND, -expiryTime);
+            //Set the calendar time to older time.
+            calendar.add(Calendar.SECOND, -expiryTimeInSeconds);
+
             String date = DateTimeUtility.getFormattedTime(calendar.getTime());
+
             db.delete(TABLE_NAME, COLUMN_DEVICE_LOG + "<?", new String[]{date});
+
         } catch (Exception e) {
             e.printStackTrace();
             SmartLog.e(TAG, "DeviceLogTable: Exception occurred while deleteAllDeviceLogs: " + e);

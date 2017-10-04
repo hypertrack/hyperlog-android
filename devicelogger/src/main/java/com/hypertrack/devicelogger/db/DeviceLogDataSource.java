@@ -43,5 +43,5 @@ interface DeviceLogDataSource {
 
     int getDeviceLogBatchCount();
 
-    void clearOldLogs(int expiryTime);
+    void clearOldLogs(int expiryTimeInSeconds);
 }

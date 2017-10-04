@@ -1,7 +1,7 @@
 # Android Logging Library
 
 ## Overview
-A utility logger library for Android on top of standard Android `Log` class. This is a simple library that will allow Android apps or library to store log into database so that developer can pull the logs from the database as `File` or push to their server.
+A utility logger library for Android on top of standard Android `Log` class. This is a simple library that will allow Android apps or library to store log into database so that developer can pull the logs from the database as `File` or push to your server.
 
 ## Download
 Download the latest version or grab via Gradle.
@@ -36,6 +36,7 @@ File file = SmartLog.getDeviceLogsInFile(this);
 
 ## Push Logs to Server
 SmartLog will push logs to server in compressed form using GZIP compression.
+**Note:** Set the API URL before calling `SmartLog.pushLogs` method otherwise `Exception` will thrown.
 ```
 SmartLog.setURL("API URL");
 SmartLog.pushLogs(this, new SmartLogCallback() {
@@ -80,7 +81,21 @@ additionalHeaders.put("Authorization","Token");
 SmartLog.pushLogs(this, additionalHeaders, smartLogCallback);
 ```
 
-
+* By default, seven days older logs will get delete automatically from the database. You can change the expiry period of logs by defining expiryTimeInSeconds.
+```
+SmartLog.initialize(@NonNull Context context, int expiryTimeInSeconds);
+```
+* Developers can also get the device log as a list of `DeviceLog` model or list of `String` .By default, fetched logs will delete from the database. Developers can override to change the default functionality.
+```
+SmartLog.getDeviceLogs(boolean deleteLogs);
+```
+* Logs will push to the server in batches. Each batch can have atmost 5000 logs. If there are more than one batches then developer can gets the specific batch data by providing batch number.
+```
+SmartLog.getDeviceLogs(boolean deleteLogs, int batchNo);
+```
+* By default, every get calls return data from first batch.
+* Get the number of batches using `SmartLog.getDeviceLogBatchCount`.
+* Developer can manually delete the logs `SmartLog.deleteLogs`.
 
 ## Contribute
 Please use the [issues tracker](https://github.com/hypertrack/smart-logging-android/issues) to raise bug reports and feature requests. We'd love to see your pull requests, so send them in!

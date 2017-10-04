@@ -129,9 +129,9 @@ class DeviceLogDatabaseHelper extends SQLiteOpenHelper implements DeviceLogDataS
     }
 
     @Override
-    public void clearOldLogs(int expiryTime) {
+    public void clearOldLogs(int expiryTimeInSeconds) {
         initializeDatabase();
 
-        DeviceLogTable.clearOldLogs(database,expiryTime);
+        DeviceLogTable.clearOldLogs(database,expiryTimeInSeconds);
     }
 }

@@ -88,7 +88,7 @@ public class SmartLog {
                 if (mDeviceLogList == null) {
                     DeviceLogDataSource logDataSource = DeviceLogDatabaseHelper.getInstance(context);
                     mDeviceLogList = new DeviceLogList(logDataSource);
-                    mDeviceLogList.clearOldLogs(EXPIRY_TIME);
+                    mDeviceLogList.clearOldLogs(expiryTimeInSeconds);
                 }
             }
         }
