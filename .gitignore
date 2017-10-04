@@ -35,3 +35,4 @@ build/
 gradlew.bat
 #NDK
 obj/
+/gradlew.bat
