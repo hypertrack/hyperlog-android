@@ -1,7 +1,7 @@
 # Android Logging Library
 
 ## Overview
-A utility logger library for Android on top of standard Android `Log` class. This is a simple library designed to be simple, small and flexible as possible that will allow Android apps or library to store `log` into `database` so that developer can pull the logs from the database into `File` or push the logs to their server.
+A utility logger library for Android on top of standard Android `Log` class for debugging purpose. This is a simple library that will allow Android apps or library to store `log` into `database` so that developer can pull the logs from the database into `File` or push the logs to their server for debugging.
 
 <p align="center">
 <kbd>
@@ -69,12 +69,14 @@ Use [`RequestBin`](https://requestb.in/) to push the logs.
 * Visit the [`RequestBin`](https://requestb.in/) site and create a `RequestBin`.
 * Set the given endpoint to the `SmartLog.setURL`.
 * After `SmartLog.pushLogs` reload the related view page to view exactly which requests were made, what headers were sent, and raw body and so on, all in a pretty graphical setting.
+* Once you get the logs on `RequestBin` create your own endpoint on your server and start receiving logs on to your server for debugging.
 
 **Note:** 
 * Push logs to server in compressed form to reduce the data consumption and response time.
 ```
 SmartLog.pushLogs(Context mContext, boolean compress, SmartLogCallback callback);
 ```
+* Logs will be compressed using `GZIP` encoding.
 * Logs will be deleted from database after successful push.
 
 ## Additional Methods
