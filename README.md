@@ -1,7 +1,7 @@
 # Android Logging Library
 
 ## Overview
-A utility logger library for Android on top of standard Android `Log` class. This is a simple library that will allow Android apps or library to store log into database so that developer can pull the logs from the database as `File` or push to your server.
+A utility logger library for Android on top of standard Android `Log` class. This is a simple library that will allow Android apps or library to store `log` into `database` so that developer can pull the logs from the database into `File` or push the logs to their server.
 
 <p align="center">
 <kbd>
@@ -48,7 +48,7 @@ File file = SmartLog.getDeviceLogsInFile(this);
 ```
 
 ## Push Logs to Server
-Set the API URL `SmartLog.setURL` before calling `SmartLog.pushLogs` method otherwise `exception` will be thrown.
+Set the API Endpoint URL `SmartLog.setURL` before calling `SmartLog.pushLogs` method otherwise `exception` will be thrown.
 ```
 SmartLog.setURL("API URL");
 SmartLog.pushLogs(this, false, new SmartLogCallback() {
@@ -76,8 +76,6 @@ Use [`RequestBin`](https://requestb.in/) to push the log.
 SmartLog.pushLogs(Context mContext, boolean compress, SmartLogCallback callback);
 ```
 * Logs will be deleted from database after successful push.
-
-
 
 ## Additional Methods
 * Different types of log.
