@@ -1,5 +1,7 @@
 # Android Logging Library
 
+[![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://opensource.org/licenses/MIT) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Download](https://api.bintray.com/packages/piyushgupta27/maven/smart-scheduler/images/download.svg) ](https://bintray.com/piyushgupta27/maven/smart-scheduler/_latestVersion)
 ## Overview
 A utility logger library for Android on top of standard Android `Log` class for debugging purpose. This is a simple library that will allow Android apps or library to store `log` into `database` so that developer can pull the logs from the database into `File` or push the logs to their server for debugging.
 
@@ -67,7 +69,7 @@ SmartLog.pushLogs(this, false, new SmartLogCallback() {
 
 Use [`RequestBin`](https://requestb.in/) to push the logs.
 * Visit the [`RequestBin`](https://requestb.in/) site and create a `RequestBin`.
-* Set the given endpoint to the `SmartLog.setURL`.
+* Once you have the bin created, copy the URL and set it to the `SmartLog.setURL`.
 * After `SmartLog.pushLogs` reload the related view page to view exactly which requests were made, what headers were sent, and raw body and so on, all in a pretty graphical setting.
 * Once you get the logs on `RequestBin` create your own endpoint on your server and start receiving logs on to your server for debugging.
 
