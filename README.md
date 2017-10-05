@@ -63,10 +63,19 @@ SmartLog.pushLogs(this, false, new SmartLogCallback() {
             }
 });
 ```
-**Note:** Push logs to server in compressed form to reduce the data consumption and response time.
+**Endpoint for testing**
+
+Use [`RequestBin`](https://requestb.in/) to push the log.
+* Visit the [`RequestBin`](https://requestb.in/) site and create a `RequestBin`.
+* Set the given endpoint to the `SmartLog.setURL`.
+* After `SmartLog.pushLogs` reload the related view page to view exactly which requests were made, what headers were sent, and raw body and so on, all in a pretty graphical setting.
+
+**Note:** 
+* Push logs to server in compressed form to reduce the data consumption and response time.
 ```
 SmartLog.pushLogs(Context mContext, boolean compress, SmartLogCallback callback);
 ```
+* Logs will be deleted from database after successful push.
 
 
 
@@ -96,7 +105,7 @@ SmartLog.logCount();
 ```
 HashMap<String, String> additionalHeaders = new HashMap<>();
 additionalHeaders.put("Authorization","Token");
-SmartLog.pushLogs(this, additionalHeaders,false, smartLogCallback);
+SmartLog.pushLogs(this, additionalHeaders, false, smartLogCallback);
 ```
 
 * By default, seven days older logs will get delete automatically from the database. You can change the expiry period of logs by defining expiryTimeInSeconds.
