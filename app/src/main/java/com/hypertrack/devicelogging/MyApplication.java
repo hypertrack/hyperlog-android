@@ -15,6 +15,6 @@ public class MyApplication extends Application {
         super.onCreate();
         SmartLog.initialize(this);
         SmartLog.setLogLevel(Log.VERBOSE);
-        SmartLog.setURL("https://requestb.in/uzypjsuz");
+        SmartLog.setURL("https://requestb.in/1ggx8zp1");
     }
 }

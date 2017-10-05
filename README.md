@@ -3,6 +3,19 @@
 ## Overview
 A utility logger library for Android on top of standard Android `Log` class. This is a simple library that will allow Android apps or library to store log into database so that developer can pull the logs from the database as `File` or push to your server.
 
+<p align="center">
+<kbd>
+<img src="asset/device_logger.gif" alt="Device Logger" width="380" height="633">
+</kbd>
+</p>
+
+## Log Format
+```
+timeStamp + " | " + appVersion + " : " + osVersion + " | " + deviceUUID + " | [" + logLevelName + "]: " + message
+```
+```
+2017-10-05T14:46:36.541Z 1.0 : Android-7.1.1 | 62bb1162466c3eed | [INFO]: Log has been pushed
+```
 ## Download
 Download the latest version or grab via Gradle.
 
@@ -28,7 +41,7 @@ SmartLog.setLogLevel(Log.VERBOSE);
 ```
 SmartLog.d(TAG,"Test");
 ```
- 
+
 ## Get Logs in a File
 ```
 File file = SmartLog.getDeviceLogsInFile(this);
@@ -36,7 +49,8 @@ File file = SmartLog.getDeviceLogsInFile(this);
 
 ## Push Logs to Server
 SmartLog will push logs to server in compressed form using GZIP compression.
-**Note:** Set the API URL before calling `SmartLog.pushLogs` method otherwise `Exception` will thrown.
+
+**Note:** Set the API URL `SmartLog.setURL` before calling `SmartLog.pushLogs` method otherwise `exception` will be thrown.
 ```
 SmartLog.setURL("API URL");
 SmartLog.pushLogs(this, new SmartLogCallback() {
@@ -51,6 +65,8 @@ SmartLog.pushLogs(this, new SmartLogCallback() {
             }
 });
 ```
+
+
 
 ## Additional Methods
 * Different types of log.
@@ -74,7 +90,7 @@ SmartLog.hasPendingDeviceLogs();
 SmartLog.logCount();
 ```
 
-* Pass additional headers along with API call while pushing logs to server.
+* Developer can pass additional headers along with API call while pushing logs to server.
 ```
 HashMap<String, String> additionalHeaders = new HashMap<>();
 additionalHeaders.put("Authorization","Token");

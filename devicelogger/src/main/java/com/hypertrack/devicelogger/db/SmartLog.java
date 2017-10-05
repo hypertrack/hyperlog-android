@@ -39,8 +39,6 @@ import com.hypertrack.devicelogger.db.Utils.DateTimeUtility;
 import com.hypertrack.devicelogger.db.Utils.Utils;
 import com.hypertrack.devicelogger.db.Utils.VolleyUtils;
 
-import org.json.JSONArray;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -242,7 +240,7 @@ public class SmartLog {
             deviceUUID = "DeviceUUID";
         }
 
-        return timeStamp + " " + senderName + " : " + osVersion + " | " + deviceUUID + " | " + "SmartLog " + " | ";
+        return timeStamp + " | " + senderName + " : " + osVersion + " | " + deviceUUID + " | ";
     }
 
     private static void r(final String message) {
@@ -478,11 +476,12 @@ public class SmartLog {
      * log will push to the server in batches.
      *
      * @param mContext The current context.
+     * @param compress True, if logs will push to server in compressed format, false otherwise.
      * @param callback Instance of {@link SmartLogCallback}.
      * @throws IllegalArgumentException if the API endpoint url is empty or null
      */
-    public static void pushLogs(Context mContext, SmartLogCallback callback) {
-        pushLogs(mContext, null, null, callback);
+    public static void pushLogs(Context mContext, boolean compress, SmartLogCallback callback) {
+        pushLogs(mContext, null, null, compress, callback);
     }
 
     /**
@@ -493,13 +492,14 @@ public class SmartLog {
      * If device log count is greater than {@value DeviceLogTable#DEVICE_LOG_REQUEST_QUERY_LIMIT} then
      * log will push to the server in batches.
      *
-     * @param fileName Name of the file that you want to receive on your server.
      * @param mContext The current context.
+     * @param fileName Name of the file that you want to receive on your server.
+     * @param compress True, if logs will push to server in compressed format, false otherwise.
      * @param callback Instance of {@link SmartLogCallback}.
      * @throws IllegalArgumentException if the API endpoint url is empty or null
      */
-    public static void pushLogs(Context mContext, String fileName, SmartLogCallback callback) {
-        pushLogs(mContext, fileName, null, callback);
+    public static void pushLogs(Context mContext, String fileName, boolean compress, SmartLogCallback callback) {
+        pushLogs(mContext, fileName, null, compress, callback);
     }
 
     /**
@@ -512,11 +512,13 @@ public class SmartLog {
      *
      * @param mContext          The current context.
      * @param additionalHeaders Additional Headers to pass along with request.
+     * @param compress          True, if logs will push to server in compressed format, false otherwise.
      * @param callback          Instance of {@link SmartLogCallback}.
      * @throws IllegalArgumentException if the API endpoint url is empty or null
      */
-    public static void pushLogs(Context mContext, HashMap<String, String> additionalHeaders, SmartLogCallback callback) {
-        pushLogs(mContext, null, additionalHeaders, callback);
+    public static void pushLogs(Context mContext, HashMap<String, String> additionalHeaders, boolean compress,
+                                SmartLogCallback callback) {
+        pushLogs(mContext, null, additionalHeaders, compress, callback);
     }
 
     /**
@@ -530,11 +532,12 @@ public class SmartLog {
      * @param fileName          Name of the file that you want to receive on your server.
      * @param mContext          The current context.
      * @param additionalHeaders Additional Headers to pass along with request.
+     * @param compress          True, if logs will push to server in compressed format, false otherwise.
      * @param callback          Instance of {@link SmartLogCallback}.
      * @throws IllegalArgumentException if the API endpoint url is empty or null
      */
     public static void pushLogs(Context mContext, String fileName, HashMap<String, String> additionalHeaders,
-                                final SmartLogCallback callback) {
+                                boolean compress, final SmartLogCallback callback) {
 
         if (!isInitialize())
             return;
@@ -570,16 +573,16 @@ public class SmartLog {
             }
 
             HTTPMultiPartPostRequest httpMultiPartPostRequest = new HTTPMultiPartPostRequest<>(URL, bytes,
-                    fileName, additionalHeaders, mContext, JSONArray.class, new Response.Listener<JSONArray>() {
+                    fileName, additionalHeaders, mContext, String.class, compress, new Response.Listener<String>() {
                 @Override
-                public void onResponse(JSONArray response) {
+                public void onResponse(String response) {
                     temp[0]--;
                     mDeviceLogList.clearDeviceLogs(deviceLogs);
                     SmartLog.i(TAG, "Log has been pushed");
 
                     if (callback != null && temp[0] == 0) {
                         if (isAllLogsPushed[0]) {
-                            callback.onSuccess("All logs has been pushed");
+                            callback.onSuccess(response);
                         } else {
                             callback.onError(new VolleyError("All logs hasn't been pushed"));
                         }
@@ -613,7 +616,6 @@ public class SmartLog {
     public static void deleteLogs() {
         if (!isInitialize())
             return;
-
         mDeviceLogList.clearSavedDeviceLogs();
     }
 }

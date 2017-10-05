@@ -20,6 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -31,7 +32,7 @@ class HTTPMultiPartPostRequest<T> extends Request<T> {
     private static final String TAG = HTTPMultiPartPostRequest.class.getSimpleName();
     private final Gson mGson;
     private final Class<T> mResponseType;
-    private final Response.Listener<T> mListener;
+    private final WeakReference<Response.Listener<T>> mListener;
 
     private Context context;
     private byte[] multiPartRequestBody;
@@ -39,21 +40,23 @@ class HTTPMultiPartPostRequest<T> extends Request<T> {
     private String packageName;
 
     private final HashMap<String, String> additionalHeaders;
-    private static final String HEADER_AUTHORIZATION = "Authorization";
     private static final String HEADER_ENCODING = "Content-Encoding";
     private static final String ENCODING_GZIP = "gzip";
     private final String boundary = "SmartLog -" + System.currentTimeMillis();
 
     private boolean mGzipEnabled = false;
 
-    HTTPMultiPartPostRequest(String url, byte[] multiPartRequestBody, String filename, HashMap<String,String> additionalHeaders, Context context,
-                             Class<T> responseType, Response.Listener<T> listener, Response.ErrorListener errorListener) {
+    HTTPMultiPartPostRequest(String url, byte[] multiPartRequestBody, String filename, HashMap<String, String> additionalHeaders, Context context,
+                             Class<T> responseType, boolean compress, Response.Listener<T> listener, Response.ErrorListener errorListener) {
         super(Method.POST, url, errorListener);
         this.context = context;
-        this.multiPartRequestBody = getRequestBody(multiPartRequestBody);
+        if (compress)
+            this.multiPartRequestBody = getRequestBody(multiPartRequestBody);
+        else
+            this.multiPartRequestBody = multiPartRequestBody;
         this.filename = filename;
         this.mResponseType = responseType;
-        this.mListener = listener;
+        this.mListener = new WeakReference<>(listener);
         this.mGson = CustomGson.gson();
         this.additionalHeaders = additionalHeaders;
         packageName = context.getPackageName();
@@ -192,7 +195,8 @@ class HTTPMultiPartPostRequest<T> extends Request<T> {
     @Override
     protected void deliverResponse(T response) {
         SmartLog.i(TAG, "deliverResponse: ");
-        mListener.onResponse(response);
+        if(mListener != null && mListener.get() != null)
+        mListener.get().onResponse(response);
     }
 
     @Override
