@@ -31,7 +31,7 @@ dependencies {
 ```
 
 ## Initialize
-* Inside `onCreate` of Application class or Launcher Activity. 
+Inside `onCreate` of Application class or Launcher Activity. 
 ```
 SmartLog.initialize(this);
 SmartLog.setLogLevel(Log.VERBOSE);
