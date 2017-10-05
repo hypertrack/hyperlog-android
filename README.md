@@ -53,7 +53,7 @@ SmartLog will push logs to server in compressed form using GZIP compression.
 **Note:** Set the API URL `SmartLog.setURL` before calling `SmartLog.pushLogs` method otherwise `exception` will be thrown.
 ```
 SmartLog.setURL("API URL");
-SmartLog.pushLogs(this, new SmartLogCallback() {
+SmartLog.pushLogs(this, false, new SmartLogCallback() {
             @Override
             public void onSuccess(@NonNull String response) {
 
@@ -94,7 +94,7 @@ SmartLog.logCount();
 ```
 HashMap<String, String> additionalHeaders = new HashMap<>();
 additionalHeaders.put("Authorization","Token");
-SmartLog.pushLogs(this, additionalHeaders, smartLogCallback);
+SmartLog.pushLogs(this, additionalHeaders,false, smartLogCallback);
 ```
 
 * By default, seven days older logs will get delete automatically from the database. You can change the expiry period of logs by defining expiryTimeInSeconds.
