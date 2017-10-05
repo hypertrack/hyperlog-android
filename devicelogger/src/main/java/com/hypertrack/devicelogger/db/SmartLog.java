@@ -476,7 +476,7 @@ public class SmartLog {
      * log will push to the server in batches.
      *
      * @param mContext The current context.
-     * @param compress True, if logs will push to server in compressed format, false otherwise.
+     * @param compress True, if logs will push to server in GZIP compressed format, false otherwise.
      * @param callback Instance of {@link SmartLogCallback}.
      * @throws IllegalArgumentException if the API endpoint url is empty or null
      */
@@ -494,7 +494,7 @@ public class SmartLog {
      *
      * @param mContext The current context.
      * @param fileName Name of the file that you want to receive on your server.
-     * @param compress True, if logs will push to server in compressed format, false otherwise.
+     * @param compress True, if logs will push to server in GZIP compressed format, false otherwise.
      * @param callback Instance of {@link SmartLogCallback}.
      * @throws IllegalArgumentException if the API endpoint url is empty or null
      */
@@ -512,7 +512,7 @@ public class SmartLog {
      *
      * @param mContext          The current context.
      * @param additionalHeaders Additional Headers to pass along with request.
-     * @param compress          True, if logs will push to server in compressed format, false otherwise.
+     * @param compress          True, if logs will push to server in GZIP compressed format, false otherwise.
      * @param callback          Instance of {@link SmartLogCallback}.
      * @throws IllegalArgumentException if the API endpoint url is empty or null
      */
@@ -532,7 +532,7 @@ public class SmartLog {
      * @param fileName          Name of the file that you want to receive on your server.
      * @param mContext          The current context.
      * @param additionalHeaders Additional Headers to pass along with request.
-     * @param compress          True, if logs will push to server in compressed format, false otherwise.
+     * @param compress          True, if logs will push to server in GZIP compressed format, false otherwise.
      * @param callback          Instance of {@link SmartLogCallback}.
      * @throws IllegalArgumentException if the API endpoint url is empty or null
      */

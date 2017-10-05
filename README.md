@@ -48,9 +48,7 @@ File file = SmartLog.getDeviceLogsInFile(this);
 ```
 
 ## Push Logs to Server
-SmartLog will push logs to server in compressed form using GZIP compression.
-
-**Note:** Set the API URL `SmartLog.setURL` before calling `SmartLog.pushLogs` method otherwise `exception` will be thrown.
+Set the API URL `SmartLog.setURL` before calling `SmartLog.pushLogs` method otherwise `exception` will be thrown.
 ```
 SmartLog.setURL("API URL");
 SmartLog.pushLogs(this, false, new SmartLogCallback() {
@@ -64,6 +62,10 @@ SmartLog.pushLogs(this, false, new SmartLogCallback() {
 
             }
 });
+```
+**Note:** Push logs to server in compressed form to reduce the data consumption and response time.
+```
+SmartLog.pushLogs(Context mContext, boolean compress, SmartLogCallback callback);
 ```
 
 
