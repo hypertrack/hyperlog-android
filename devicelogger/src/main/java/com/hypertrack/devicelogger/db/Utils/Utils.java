@@ -67,7 +67,7 @@ public class Utils {
             }
             //Create a new file with file name
             File logFile = new File(filePath, fileName);
-            FileWriter writer = new FileWriter(logFile);
+            FileWriter writer = new FileWriter(logFile,true);
             BufferedWriter bufferedWriter = new BufferedWriter(writer, 4 * (int) MEGA);
             write(data, bufferedWriter);
 

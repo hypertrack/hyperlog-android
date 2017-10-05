@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void getFile(View view) {
-        File file = SmartLog.getDeviceLogsInFile(this);
+        File file = SmartLog.getDeviceLogsInFile(this,false);
         if (file != null && file.exists())
             showToast("File Created at: " + file.getAbsolutePath());
     }

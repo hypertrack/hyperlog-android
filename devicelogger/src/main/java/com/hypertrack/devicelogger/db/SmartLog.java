@@ -405,28 +405,63 @@ public class SmartLog {
 
     /**
      * Call this method to get a stored Device Logs as a File object.
-     * A text file will create in the app folder containing all logs.
+     * A text file will create in the app folder containing all logs with the current date time as name of the file.
+     *
+     * @param mContext   The current context.
+     * @param deleteLogs If true then logs will delete from the device.
+     * @return {@link File} object or {@code null if there is not any logs in device.
+     */
+    public static File getDeviceLogsInFile(Context mContext, boolean deleteLogs) {
+        return getDeviceLogsInFile(mContext, null, deleteLogs);
+    }
+
+    /**
+     * Call this method to get a stored Device Logs as a File object.
+     * A text file will create in the app folder containing all logs with the current date time as name of the file.
      *
      * @param mContext The current context.
-     * @param fileName Name of the file.
-     * @return {@link File} object, or {@code null if there is not any logs in device.
+     * @return {@link File} object or {@code null if there is not any logs in device.
      */
     public static File getDeviceLogsInFile(Context mContext, String fileName) {
+        return getDeviceLogsInFile(mContext, fileName, true);
+    }
+
+    /**
+     * Call this method to get a stored Device Logs as a File object.
+     * A text file will create in the app folder containing all logs.
+     *
+     * @param mContext   The current context.
+     * @param fileName   Name of the file.
+     * @param deleteLogs If true then logs will delete from the device.
+     * @return {@link File} object, or {@code null if there is not any logs in device.
+     */
+    public static File getDeviceLogsInFile(Context mContext, String fileName, boolean deleteLogs) {
 
         if (!isInitialize())
             return null;
 
         File file = null;
-        List<String> stringList = getDeviceLogsAsStringList(true);
 
         if (TextUtils.isEmpty(fileName)) {
             fileName = DateTimeUtility.getCurrentTime() + ".txt";
+            fileName = fileName.replaceAll("[^a-zA-Z0-9_\\\\-\\\\.]", "_");
         }
 
-        if (stringList != null && !stringList.isEmpty()) {
-            file = Utils.writeStringsToFile(mContext, stringList, fileName);
-            if (file != null)
-                SmartLog.i(TAG, "Log File has been created at " + file.getAbsolutePath());
+        //Check how many batches of device logs are available to push
+        int logsBatchCount = getDeviceLogBatchCount();
+
+        while (logsBatchCount != 0) {
+            List<DeviceLog> deviceLogList = getDeviceLogs(deleteLogs);
+
+            if (deviceLogList != null && !deviceLogList.isEmpty()) {
+                file = Utils.writeStringsToFile(mContext, getDeviceLogsAsStringList(deviceLogList), fileName);
+                if (file != null) {
+                    if (deleteLogs)
+                        mDeviceLogList.clearDeviceLogs(deviceLogList);
+                    SmartLog.i(TAG, "Log File has been created at " + file.getAbsolutePath());
+                }
+            }
+            logsBatchCount--;
         }
         return file;
     }
@@ -564,8 +599,8 @@ public class SmartLog {
 
         while (logsBatchCount != 0) {
 
-            final List<DeviceLog> deviceLogs = getDeviceLogs(false);
-
+            final List<DeviceLog> deviceLogs = getDeviceLogs(false, logsBatchCount);
+            deviceLogs.add(new DeviceLog(getFormattedMessage(Log.INFO, "Log Counts: " + deviceLogs.size() + " | File Size: " + deviceLogs.toString().length() + " bytes.")));
             //Get string data into byte format.
             byte[] bytes = Utils.getByteData(deviceLogs);
 
