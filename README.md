@@ -1,7 +1,7 @@
 # Android Logging Library
 
 ## Overview
-A utility logger library for Android on top of standard Android `Log` class. This is a simple library that will allow Android apps or library to store `log` into `database` so that developer can pull the logs from the database into `File` or push the logs to their server.
+A utility logger library for Android on top of standard Android `Log` class. This is a simple library designed to be simple, small and flexible as possible that will allow Android apps or library to store `log` into `database` so that developer can pull the logs from the database into `File` or push the logs to their server.
 
 <p align="center">
 <kbd>
@@ -39,7 +39,7 @@ SmartLog.setLogLevel(Log.VERBOSE);
 
 ## Usage
 ```
-SmartLog.d(TAG,"Test");
+SmartLog.d(TAG,"Debug Log");
 ```
 
 ## Get Logs in a File
@@ -65,7 +65,7 @@ SmartLog.pushLogs(this, false, new SmartLogCallback() {
 ```
 **Endpoint for testing**
 
-Use [`RequestBin`](https://requestb.in/) to push the log.
+Use [`RequestBin`](https://requestb.in/) to push the logs.
 * Visit the [`RequestBin`](https://requestb.in/) site and create a `RequestBin`.
 * Set the given endpoint to the `SmartLog.setURL`.
 * After `SmartLog.pushLogs` reload the related view page to view exactly which requests were made, what headers were sent, and raw body and so on, all in a pretty graphical setting.
@@ -106,7 +106,7 @@ additionalHeaders.put("Authorization","Token");
 SmartLog.pushLogs(this, additionalHeaders, false, smartLogCallback);
 ```
 
-* By default, seven days older logs will get delete automatically from the database. You can change the expiry period of logs by defining expiryTimeInSeconds.
+* By default, seven days older logs will get delete automatically from the database. You can change the expiry period of logs by defining `expiryTimeInSeconds`.
 ```
 SmartLog.initialize(@NonNull Context context, int expiryTimeInSeconds);
 ```
@@ -114,11 +114,11 @@ SmartLog.initialize(@NonNull Context context, int expiryTimeInSeconds);
 ```
 SmartLog.getDeviceLogs(boolean deleteLogs);
 ```
-* Logs will push to the server in batches. Each batch can have atmost 5000 logs. If there are more than one batches then developer can gets the specific batch data by providing batch number.
+* Logs will push to the server in batches. Each batch can have atmost `5000 logs`. If there are more than one batches then developer can gets the specific batch data by providing batch number.
 ```
 SmartLog.getDeviceLogs(boolean deleteLogs, int batchNo);
 ```
-* By default, every get calls return data from first batch.
+* By default, every get calls return data from first batch if there are one or more batch.
 * Get the number of batches using `SmartLog.getDeviceLogBatchCount`.
 * Developer can manually delete the logs `SmartLog.deleteLogs`.
 

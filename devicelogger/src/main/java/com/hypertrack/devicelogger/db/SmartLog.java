@@ -321,10 +321,11 @@ public class SmartLog {
      * @return List of {@link DeviceLog} or empty list if batch number is greater than the {@link SmartLog#getDeviceLogBatchCount()}
      */
     public static List<DeviceLog> getDeviceLogs(boolean deleteLogs, int batchNo) {
+        List<DeviceLog> deviceLogs = new ArrayList<>();
         if (!isInitialize())
-            return null;
+            return deviceLogs;
 
-        List<DeviceLog> deviceLogs = mDeviceLogList.getDeviceLogs(batchNo);
+        deviceLogs = mDeviceLogList.getDeviceLogs(batchNo);
         if (deleteLogs) {
             mDeviceLogList.clearDeviceLogs(deviceLogs);
         }
@@ -357,7 +358,7 @@ public class SmartLog {
      *
      * @param deleteLogs If true then logs will delete from the device.
      * @param batchNo    If there are more than one batch of device log then specify the batch number. Batch number should be greater than or equal to 1.
-     * @return List of {@link String} or If batch number is greater than the {@link SmartLog#getDeviceLogBatchCount()} then returns empty list;
+     * @return List of {@link String} or if the given batchNo is greater than the {@link SmartLog#getDeviceLogBatchCount()} then returns empty list;
      */
     public static List<String> getDeviceLogsAsStringList(boolean deleteLogs, int batchNo) {
         List<String> logsList = new ArrayList<>();
@@ -396,7 +397,7 @@ public class SmartLog {
      * A text file will create in the app folder containing all logs with the current date time as name of the file.
      *
      * @param mContext The current context.
-     * @return {@link File} object
+     * @return {@link File} object or {@code null if there is not any logs in device.
      */
     public static File getDeviceLogsInFile(Context mContext) {
         return getDeviceLogsInFile(mContext, null);
