@@ -117,6 +117,7 @@ SmartLog.initialize(@NonNull Context context, int expiryTimeInSeconds);
 * Developers can also get the device log as a list of `DeviceLog` model or list of `String` .By default, fetched logs will delete from the database. Developers can override to change the default functionality.
 ```
 SmartLog.getDeviceLogs(boolean deleteLogs);
+SmartLog.getDeviceLogsInFile(Context mContext, boolean deleteLogs);
 ```
 * Logs will push to the server in batches. Each batch can have atmost `5000 logs`. If there are more than one batches then developer can gets the specific batch data by providing batch number.
 ```
