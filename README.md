@@ -80,6 +80,7 @@ SmartLog.pushLogs(Context mContext, boolean compress, SmartLogCallback callback)
 ```
 * Logs will be compressed using `GZIP` encoding.
 * Logs will be deleted from database after successful push.
+* Logs will push to the server in batches. Each batch can have maximum of `5000 logs`.
 
 ## Additional Methods
 * Different types of log.
@@ -119,11 +120,11 @@ SmartLog.initialize(@NonNull Context context, int expiryTimeInSeconds);
 SmartLog.getDeviceLogs(boolean deleteLogs);
 SmartLog.getDeviceLogsInFile(Context mContext, boolean deleteLogs);
 ```
-* Logs will push to the server in batches. Each batch can have atmost `5000 logs`. If there are more than one batches then developer can gets the specific batch data by providing batch number.
+* By default, every get calls return data from first batch if there are one or more batch.
+* If there are more than one batches then developer can gets the specific batch data by providing batch number.
 ```
 SmartLog.getDeviceLogs(boolean deleteLogs, int batchNo);
 ```
-* By default, every get calls return data from first batch if there are one or more batch.
 * Get the number of batches using `SmartLog.getDeviceLogBatchCount`.
 * Developer can manually delete the logs `SmartLog.deleteLogs`.
 
