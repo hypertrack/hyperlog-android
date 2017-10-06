@@ -67,6 +67,12 @@ SmartLog.pushLogs(this, false, new SmartLogCallback() {
 ```
 **Endpoint for testing**
 
+<p align="center">
+<kbd>
+<img src="asset/request_bin.png" alt="RequestBin">
+</kbd>
+</p>
+
 Use [`RequestBin`](https://requestb.in/) to push the logs.
 * Visit the [`RequestBin`](https://requestb.in/) site and create a `RequestBin`.
 * Once you have the bin created, copy the URL and set it to the `SmartLog.setURL`.
