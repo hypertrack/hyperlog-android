@@ -13,7 +13,7 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        SmartLog.initialize(this);
+        SmartLog.initialize(this,new CustomLog(this));
         SmartLog.setLogLevel(Log.VERBOSE);
         SmartLog.setURL("https://requestb.in/1ggx8zp1");
     }

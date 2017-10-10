@@ -28,8 +28,8 @@ public class MainActivity extends AppCompatActivity {
     ArrayAdapter listAdapter;
     int batchNumber = 1;
     int count = 0;
-    String[] logs = new String[]{"Download Library","Library Downloaded","Initialize Library", "Library Initialized","Log Message", "Message Logged",
-            "Create Log File","Log File Created","Push Logs to Server", "Logs Pushed to Server", "Logs Deleted", "Library Downloaded", "Library Initialized", "Message Logged",
+    String[] logs = new String[]{"Download Library", "Library Downloaded", "Initialize Library", "Library Initialized", "Log Message", "Message Logged",
+            "Create Log File", "Log File Created", "Push Logs to Server", "Logs Pushed to Server", "Logs Deleted", "Library Downloaded", "Library Initialized", "Message Logged",
             "Log File Created", "Logs Pushed to Server", "Logs Deleted"};
     Toast toast;
 
@@ -37,7 +37,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        //Set Custom Log Message Format.
+        SmartLog.setLogFormat(new CustomLog(this));
         editText = (EditText) findViewById(R.id.logText);
         listView = (ListView) findViewById(R.id.listView);
         listAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, logsList);
@@ -62,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void getFile(View view) {
-        File file = SmartLog.getDeviceLogsInFile(this,false);
+        File file = SmartLog.getDeviceLogsInFile(this, false);
         if (file != null && file.exists())
             showToast("File Created at: " + file.getAbsolutePath());
     }
@@ -100,10 +101,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-    private void showToast(String message){
-        if(toast != null)
+
+    private void showToast(String message) {
+        if (toast != null)
             toast.cancel();
-        toast = Toast.makeText(this,message,Toast.LENGTH_SHORT);
+        toast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
         toast.show();
     }
 }
