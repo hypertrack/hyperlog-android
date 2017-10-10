@@ -96,10 +96,7 @@ timeStamp + " | " + appVersion + " : " + osVersion + " | " + deviceUUID + " | ["
 This message can easily be customize.
 1. Create a new class extending `LogFormat`.
 2. Override `getFormattedMessage` method.
-3. Now return the formatted message that will store in database.
-4. Above created class instance then needs to be passed while initializing `SmartLog` or can be set later.
-
-Create CustomLogMessage Class
+3. Now return the formatted message.
 ```
 class CustomLogMessage extends LogFormat {
 
@@ -115,7 +112,7 @@ class CustomLogMessage extends LogFormat {
 }
 
 ```
-Set Log Format
+4. Above created class instance then needs to be passed while initializing `SmartLog` or can be set later.
 ```
 SmartLog.initialize(this,new CustomLog(this));
  
