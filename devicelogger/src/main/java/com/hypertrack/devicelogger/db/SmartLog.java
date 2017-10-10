@@ -26,15 +26,12 @@ SOFTWARE.
 package com.hypertrack.devicelogger.db;
 
 import android.content.Context;
-import android.os.Build;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.hypertrack.devicelogger.BuildConfig;
 import com.hypertrack.devicelogger.db.Utils.DateTimeUtility;
 import com.hypertrack.devicelogger.db.Utils.Utils;
 import com.hypertrack.devicelogger.db.Utils.VolleyUtils;
@@ -53,18 +50,42 @@ public class SmartLog {
     private static int logLevel = Log.WARN;
     private static DeviceLogList mDeviceLogList;
     private static String URL;
-    private static String deviceUUID;
     private static final int EXPIRY_TIME = 7 * 24 * 60 * 60;// 7 Days
+    private static LogFormat mLogFormat;
 
     /**
      * Call this method to initialize SmartLog.
      * By default, seven days older logs will gets deleted automatically.
      *
      * @param context The current context.
-     * @see #initialize(Context, int)
+     * @see #initialize(Context, int, LogFormat)
      */
     public static void initialize(@NonNull Context context) {
-        initialize(context, EXPIRY_TIME);
+        initialize(context, EXPIRY_TIME, new LogFormat(context));
+    }
+
+    /**
+     * Call this method to initialize SmartLog.
+     * By default, seven days older logs will gets deleted automatically.
+     *
+     * @param context   The current context.
+     * @param logFormat {@link LogFormat} to set custom log message format.
+     * @see #initialize(Context, int, LogFormat)
+     */
+    public static void initialize(@NonNull Context context, @NonNull LogFormat logFormat) {
+        initialize(context, EXPIRY_TIME, logFormat);
+    }
+
+    /**
+     * Call this method to initialize SmartLog.
+     * By default, seven days older logs will gets deleted automatically.
+     *
+     * @param context             The current context.
+     * @param expiryTimeInSeconds Expiry time for logs in seconds.
+     * @see #initialize(Context, int, LogFormat)
+     */
+    public static void initialize(@NonNull Context context, int expiryTimeInSeconds) {
+        initialize(context, expiryTimeInSeconds, new LogFormat(context));
     }
 
     /**
@@ -73,23 +94,35 @@ public class SmartLog {
      *
      * @param context             The current context.
      * @param expiryTimeInSeconds Expiry time for logs in seconds.
+     * @param logFormat           {@link LogFormat} to set custom log message format.
      * @see #initialize(Context)
      */
-    public static void initialize(@NonNull Context context, int expiryTimeInSeconds) {
+    public static void initialize(@NonNull Context context, int expiryTimeInSeconds, @NonNull LogFormat logFormat) {
         if (context == null)
             throw new IllegalArgumentException("Context cannot be null.");
 
-        Context mContext = context.getApplicationContext();
-        deviceUUID = Settings.Secure.getString(mContext.getContentResolver(), Settings.Secure.ANDROID_ID);
         if (mDeviceLogList == null) {
             synchronized (SmartLog.class) {
                 if (mDeviceLogList == null) {
+                    if (logFormat != null)
+                        mLogFormat = logFormat;
+                    else mLogFormat = new LogFormat(context);
                     DeviceLogDataSource logDataSource = DeviceLogDatabaseHelper.getInstance(context);
                     mDeviceLogList = new DeviceLogList(logDataSource);
                     mDeviceLogList.clearOldLogs(expiryTimeInSeconds);
+
                 }
             }
         }
+    }
+
+    /**
+     * Call this method to define a custom log message format.
+     * @param logFormat LogFormat to set custom log message format.
+     * */
+    public static void setLogFormat(@NonNull LogFormat logFormat) {
+        if (mLogFormat != null)
+            mLogFormat = logFormat;
     }
 
     private static boolean isInitialize() {
@@ -162,7 +195,7 @@ public class SmartLog {
             Log.i(tag, message + '\n' + Log.getStackTraceString(tr));
         }
 
-        r(getFormattedMessage(Log.INFO, message));
+        r(mLogFormat.getFormattedMessage(Log.INFO, message));
     }
 
     /**
@@ -177,7 +210,7 @@ public class SmartLog {
             Log.w(tag, message + '\n' + Log.getStackTraceString(tr));
         }
 
-        r(getFormattedMessage(Log.WARN, message));
+        r(mLogFormat.getFormattedMessage(Log.WARN, message));
     }
 
     public static void w(String tag, String message) {
@@ -189,7 +222,7 @@ public class SmartLog {
             Log.e(tag, message + '\n' + Log.getStackTraceString(tr));
         }
 
-        r(getFormattedMessage(Log.ERROR, message));
+        r(mLogFormat.getFormattedMessage(Log.ERROR, message));
     }
 
     public static void e(String tag, String message) {
@@ -203,7 +236,7 @@ public class SmartLog {
             Log.e(tag, "**********************************************");
         }
 
-        r(getFormattedMessage(Log.ERROR, "EXCEPTION: " + getMethodName() + ", " + message));
+        r(mLogFormat.getFormattedMessage(Log.ERROR, "EXCEPTION: " + getMethodName() + ", " + message));
     }
 
     public static void exception(String tag, String message) {
@@ -218,7 +251,7 @@ public class SmartLog {
     }
 
     public static void a(String message) {
-        r(getFormattedMessage(Log.ASSERT, message));
+        r(mLogFormat.getFormattedMessage(Log.ASSERT, message));
     }
 
     private static String getMethodName() {
@@ -227,21 +260,6 @@ public class SmartLog {
         return e.getMethodName();
     }
 
-    private static String getFormattedMessage(int logLevel, String message) {
-        return getLogPrefix() + getLogLevelName(logLevel) + message;
-    }
-
-    private static String getLogPrefix() {
-        String timeStamp = DateTimeUtility.getCurrentTime();
-        String senderName = BuildConfig.VERSION_NAME;
-        String osVersion = "Android-" + Build.VERSION.RELEASE;
-
-        if (deviceUUID == null) {
-            deviceUUID = "DeviceUUID";
-        }
-
-        return timeStamp + " | " + senderName + " : " + osVersion + " | " + deviceUUID + " | ";
-    }
 
     private static void r(final String message) {
 
@@ -262,35 +280,6 @@ public class SmartLog {
         } catch (OutOfMemoryError | Exception e) {
             e.printStackTrace();
         }
-    }
-
-    private static String getLogLevelName(int messageLogLevel) {
-
-        String logLevelName;
-        switch (messageLogLevel) {
-            case Log.VERBOSE:
-                logLevelName = "VERBOSE";
-                break;
-            case Log.DEBUG:
-                logLevelName = "DEBUG";
-                break;
-            case Log.INFO:
-                logLevelName = "INFO";
-                break;
-            case Log.WARN:
-                logLevelName = "WARN";
-                break;
-            case Log.ERROR:
-                logLevelName = "ERROR";
-                break;
-            case Log.ASSERT:
-                logLevelName = "ASSERT";
-                break;
-            default:
-                logLevelName = "NONE";
-        }
-
-        return "[" + logLevelName + "]" + ": ";
     }
 
     /**
@@ -600,7 +589,8 @@ public class SmartLog {
         while (logsBatchCount != 0) {
 
             final List<DeviceLog> deviceLogs = getDeviceLogs(false, logsBatchCount);
-            deviceLogs.add(new DeviceLog(getFormattedMessage(Log.INFO, "Log Counts: " + deviceLogs.size() + " | File Size: " + deviceLogs.toString().length() + " bytes.")));
+            deviceLogs.add(new DeviceLog(mLogFormat.getFormattedMessage(Log.INFO, "Log Counts: " +
+                    deviceLogs.size() + " | File Size: " + deviceLogs.toString().length() + " bytes.")));
             //Get string data into byte format.
             byte[] bytes = Utils.getByteData(deviceLogs);
 
