@@ -3,7 +3,7 @@
 [![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://opensource.org/licenses/MIT) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Download](https://api.bintray.com/packages/piyushgupta27/maven/smart-scheduler/images/download.svg) ](https://bintray.com/piyushgupta27/maven/smart-scheduler/_latestVersion)
 ## Overview
-A utility logger library for Android on top of standard Android `Log` class for debugging purpose. This is a simple library that will allow Android apps or library to store `log` into `database` so that developer can pull the logs from the database into `File` or push the logs to their `server` for `debugging`.
+A utility logger library for Android on top of standard Android `Log` class for debugging purpose. This is a simple library that will allow Android apps or library to store `log` into `database` so that developer can pull the logs from the database into `File` or push the logs to your `server` for `debugging`.
 
 <p align="center">
 <kbd>
@@ -76,7 +76,7 @@ SmartLog.pushLogs(this, false, new SmartLogCallback() {
 Use [`RequestBin`](https://requestb.in/) to push the logs.
 * Visit the [`RequestBin`](https://requestb.in/) site and create a `RequestBin`.
 * Once you have the bin created, copy the URL and set it to the `SmartLog.setURL`.
-* After `SmartLog.pushLogs` reload the related view page to view exactly which requests were made, what headers were sent, and raw body and so on, all in a pretty graphical setting.
+* After `SmartLog.pushLogs` reload the related view page to view exactly which requests were made, what headers were sent, and raw body and so on, all in a pretty graphical setting like above image.
 * Once you get the logs on `RequestBin` create your own endpoint on your server and start receiving logs on to your server for debugging.
 
 **Note:** 
@@ -88,6 +88,42 @@ SmartLog.pushLogs(Context mContext, boolean compress, SmartLogCallback callback)
 * Logs will be deleted from database after successful push.
 * Logs will push to the server in batches. Each batch can have maximum of `5000 logs`.
 
+## Custom Log Message Format
+Default Log Message that will store in database.
+```
+timeStamp + " | " + appVersion + " : " + osVersion + " | " + deviceUUID + " | [" + logLevelName + "]: " + message
+```
+This message can easily be customize.
+1. Create a new class extending `LogFormat`.
+2. Override `getFormattedMessage` method.
+3. Now return the formatted message that will store in database.
+4. Above created class instance then needs to be passed while initializing `SmartLog` or can be set later.
+
+Create CustomLogMessage Class
+```
+class CustomLogMessage extends LogFormat {
+
+    CustomLog(Context context) {
+        super(context);
+    }
+
+    @Override
+    public String getFormattedMessage(int logLevel, String message) {
+        //Formatted Message
+        return DateTimeUtility.getCurrentTime() + "| " + message;
+    }
+}
+
+```
+Set Log Format
+```
+SmartLog.initialize(this,new CustomLog(this));
+ 
+OR
+ 
+SmartLog.initialize(this);
+SmartLog.setLogFormat(new CustomLog(this));
+```
 ## Additional Methods
 * Different types of log.
 ```
