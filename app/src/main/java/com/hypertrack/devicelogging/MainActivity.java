@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //Set Custom Log Message Format.
-        HyperLog.setLogFormat(new CustomLog(this));
+        HyperLog.setLogFormat(new CustomLogMessageFormat(this));
         editText = (EditText) findViewById(R.id.logText);
         listView = (ListView) findViewById(R.id.listView);
         listAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, logsList);

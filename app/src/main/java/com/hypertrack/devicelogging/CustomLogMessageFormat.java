@@ -5,9 +5,9 @@ import android.content.Context;
 import com.hypertrack.devicelogger.db.LogFormat;
 import com.hypertrack.devicelogger.db.Utils.DateTimeUtility;
 
-class CustomLog extends LogFormat {
+class CustomLogMessageFormat extends LogFormat {
 
-    CustomLog(Context context) {
+    CustomLogMessageFormat(Context context) {
         super(context);
     }
 

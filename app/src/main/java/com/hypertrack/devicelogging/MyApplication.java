@@ -13,7 +13,7 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        HyperLog.initialize(this,new CustomLog(this));
+        HyperLog.initialize(this,new CustomLogMessageFormat(this));
         HyperLog.setLogLevel(Log.VERBOSE);
         HyperLog.setURL("https://requestb.in/1ggx8zp1");
     }

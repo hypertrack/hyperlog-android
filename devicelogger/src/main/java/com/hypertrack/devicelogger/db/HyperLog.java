@@ -493,7 +493,7 @@ public class HyperLog {
     }
 
     /**
-     * Call this method to push logs from device to the server.
+     * Call this method to push logs from device to the server as a text file or gzip compressed file.
      * <p>
      * Logs will get delete from the device once it successfully push to the server.
      * <p>
@@ -510,7 +510,7 @@ public class HyperLog {
     }
 
     /**
-     * Call this method to push logs from device to the server with custom filename.
+     * Call this method to push logs from device to the server with custom filename as a text file or gzip compressed file.
      * <p>
      * Logs will get delete from the device once it successfully push to the server.
      * <p>
@@ -528,7 +528,7 @@ public class HyperLog {
     }
 
     /**
-     * Call this method to push logs from device to the server.
+     * Call this method to push logs from device to the server as a text file or gzip compressed file.
      * <p>
      * Logs will get delete from the device once it successfully push to the server.
      * <p>
@@ -547,7 +547,7 @@ public class HyperLog {
     }
 
     /**
-     * Call this method to push logs from device to the server with custom filename.
+     * Call this method to push logs from device to the server with custom filename as a text file or gzip compressed file.
      * <p>
      * Logs will get delete from the device once it successfully push to the server.
      * <p>
