@@ -85,7 +85,7 @@ HyperLog.pushLogs(this, false, new HyperLogCallback() {
 
 <p align="center">
 <kbd>
-<img src="asset/request_bin.png" alt="RequestBin" width="633" height="633" ->
+<img src="asset/request_bin.png" alt="RequestBin" ->
 </kbd>
 </p>
 
