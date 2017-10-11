@@ -88,6 +88,9 @@ HyperLog.pushLogs(this, false, new HyperLogCallback() {
 <img src="asset/request_bin.png" alt="RequestBin" ->
 </kbd>
 </p>
+<p align="center">
+<em>Request Bin Sample Response</em>
+</p>
 
 **Note:** 
 * Push logs to server in compressed form to reduce the data consumption and response time.
