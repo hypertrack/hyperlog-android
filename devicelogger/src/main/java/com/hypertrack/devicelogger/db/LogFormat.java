@@ -11,12 +11,13 @@ import com.hypertrack.devicelogger.db.Utils.DateTimeUtility;
 /**
  * Created by Aman on 10/10/17.
  */
+
 /**
  * This class can be overridden to customise the log message format.
  * <br>
  * An instance of LogFormat needs to be passed to the method
  * {@link HyperLog#setLogFormat(LogFormat)} as parameter.
- * */
+ */
 public class LogFormat {
 
     private String deviceUUID;
@@ -28,24 +29,26 @@ public class LogFormat {
 
     /**
      * Implement this method to override the default log message format.
+     *
      * @param logLevel The level of logcat logging that Parse should do.
-     * @param message Log message that need to be customized.
+     * @param message  Log message that need to be customized.
      * @return Formatted Log Message that will store in database.
-     * */
-    public String getFormattedMessage(int logLevel, String message) {
-        return getLogPrefix() + getLogLevelName(logLevel) + message;
-    }
-
-    private String getLogPrefix() {
+     */
+    private String formatLogMessage(int logLevel, String message) {
         String timeStamp = DateTimeUtility.getCurrentTime();
         String senderName = BuildConfig.VERSION_NAME;
         String osVersion = "Android-" + Build.VERSION.RELEASE;
+        String logLevelName = getLogLevelName(logLevel);
+        return getFormattedLogMessage(logLevelName, message, timeStamp, senderName, osVersion, deviceUUID);
+    }
 
+    public String getFormattedLogMessage(String logLevelName, String message, String timeStamp,
+                                         String senderName, String osVersion, String deviceUUID) {
         if (deviceUUID == null) {
             deviceUUID = "DeviceUUID";
         }
 
-        return timeStamp + " | " + senderName + " : " + osVersion + " | " + deviceUUID + " | ";
+        return timeStamp + " | " + senderName + " : " + osVersion + " | " + deviceUUID + " | " + "[" + logLevelName + "]" + ": " + message;
     }
 
     private static String getLogLevelName(int messageLogLevel) {
@@ -74,7 +77,7 @@ public class LogFormat {
                 logLevelName = "NONE";
         }
 
-        return "[" + logLevelName + "]" + ": ";
+        return logLevelName;
     }
 
 }

@@ -3,7 +3,6 @@ package com.hypertrack.devicelogging;
 import android.content.Context;
 
 import com.hypertrack.devicelogger.db.LogFormat;
-import com.hypertrack.devicelogger.db.Utils.DateTimeUtility;
 
 class CustomLogMessageFormat extends LogFormat {
 
@@ -12,7 +11,9 @@ class CustomLogMessageFormat extends LogFormat {
     }
 
     @Override
-    public String getFormattedMessage(int logLevel, String message) {
-        return DateTimeUtility.getCurrentTime() + "| " + message;
+    public String getFormattedLogMessage(String logLevelName, String message, String timeStamp,
+                                         String senderName, String osVersion, String deviceUUID) {
+        String customLogFormat = timeStamp + " : " + logLevelName + " : " + deviceUUID + " : " + message;
+        return customLogFormat;
     }
 }

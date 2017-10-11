@@ -50,11 +50,11 @@ File file = HyperLog.getDeviceLogsInFile(this);
 ```
 
 ## Push Logs Files to Remote Server
-Logs file can be pushed to your remote server or `RequestBin`(for testing) or to Logstash.
+Logs file can be pushed to your remote server or `RequestBin`(for testing) or to [`Logstash`](https://www.elastic.co/products/logstash).
 
 **Steps:**
 
-1. Set the API Endpoint URL `HyperLog.setURL` before calling `HyperLog.pushLogs` method otherwise `exception` will be thrown or developers can set a testing endpoint .
+1. Set the API Endpoint URL `HyperLog.setURL` before calling `HyperLog.pushLogs` method otherwise `exception` will be thrown. Developers can also set a testing endpoint using [`RequestBin`](https://requestb.in/).
 ```
 HyperLog.setURL("API URL");
 ```
@@ -76,18 +76,18 @@ HyperLog.pushLogs(this, false, new HyperLogCallback() {
 
 **Follow steps to setup testing endpoint at [`RequestBin`](https://requestb.in/)**
 
-<p align="center">
-<kbd>
-<img src="asset/request_bin.png" alt="RequestBin">
-</kbd>
-</p>
-
 1. Visit the [`RequestBin`](https://requestb.in/) site and create a `RequestBin`.
 2. Once you have the bin created, copy the URL and set it to the `HyperLog.setURL`.
 3. Now call `HyperLog.pushLogs` to push the logs file to given endpoint. This is asynchronous call.
-4. After `HyperLog.pushLogs` success, reload the requestbin page to view exactly which requests were made, what headers were sent, and raw body and so on, all in a pretty graphical setting like above image.
+4. After `HyperLog.pushLogs` success, reload the requestbin page to view exactly which requests were made, what headers were sent, and raw body and so on, all in a pretty graphical setting like below image.
 5. Once you get the logs on `RequestBin` create your own endpoint on your server and start receiving logs on to your server for debugging.
 6. (Optional) From your server you can directly push those to [`Logstash`](https://www.elastic.co/products/logstash) (part of [ELK](https://www.elastic.co/webinars/introduction-elk-stack) stack). We have discussed ELK in one of our [blog](https://www.hypertrack.com/blog/2017/02/10/centralized-logging-at-hypertrack/).
+
+<p align="center">
+<kbd>
+<img src="asset/request_bin.png" alt="RequestBin" width="633" height="633" ->
+</kbd>
+</p>
 
 **Note:** 
 * Push logs to server in compressed form to reduce the data consumption and response time.
@@ -117,18 +117,20 @@ class CustomLogMessageFormat extends LogFormat {
         super(context);
     }
 
-    @Override
-    public String getFormattedMessage(int logLevel, String message) {
-        //Formatted Message will look like 
-        // 2017-10-05T14:46:36.541Z 1.0 | INFO | Log has been pushed
-        return DateTimeUtility.getCurrentTime() + " | " + logLevel + " | "+ message;
+    public String getFormattedLogMessage(String logLevelName, String message, String timeStamp,
+                                         String senderName, String osVersion, String deviceUUID) {
+                                         
+        //Custom Log Message Format                                
+        String customLogFormat = timeStamp + " : " + logLevelName + " : " + deviceUUID + " : " + message;
+        
+        return customLogFormat;
     }
 }
 
 ```
 Custom Log Message Format example
 ```
-2017-10-05T14:46:36.541Z 1.0 | INFO | Log has been pushed
+2017-10-05T14:46:36.541Z 1.0 | INFO | 62bb1162466c3eed | Log has been pushed
 
 ```
 

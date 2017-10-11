@@ -195,7 +195,7 @@ public class HyperLog {
             Log.i(tag, message + '\n' + Log.getStackTraceString(tr));
         }
 
-        r(mLogFormat.getFormattedMessage(Log.INFO, message));
+        r(mLogFormat.formatLogMessage(Log.INFO, message));
     }
 
     /**
@@ -210,7 +210,7 @@ public class HyperLog {
             Log.w(tag, message + '\n' + Log.getStackTraceString(tr));
         }
 
-        r(mLogFormat.getFormattedMessage(Log.WARN, message));
+        r(mLogFormat.formatLogMessage(Log.WARN, message));
     }
 
     public static void w(String tag, String message) {
@@ -222,7 +222,7 @@ public class HyperLog {
             Log.e(tag, message + '\n' + Log.getStackTraceString(tr));
         }
 
-        r(mLogFormat.getFormattedMessage(Log.ERROR, message));
+        r(mLogFormat.formatLogMessage(Log.ERROR, message));
     }
 
     public static void e(String tag, String message) {
@@ -236,7 +236,7 @@ public class HyperLog {
             Log.e(tag, "**********************************************");
         }
 
-        r(mLogFormat.getFormattedMessage(Log.ERROR, "EXCEPTION: " + getMethodName() + ", " + message));
+        r(mLogFormat.formatLogMessage(Log.ERROR, "EXCEPTION: " + getMethodName() + ", " + message));
     }
 
     public static void exception(String tag, String message) {
@@ -251,7 +251,7 @@ public class HyperLog {
     }
 
     public static void a(String message) {
-        r(mLogFormat.getFormattedMessage(Log.ASSERT, message));
+        r(mLogFormat.formatLogMessage(Log.ASSERT, message));
     }
 
     private static String getMethodName() {
@@ -589,7 +589,7 @@ public class HyperLog {
         while (logsBatchCount != 0) {
 
             final List<DeviceLog> deviceLogs = getDeviceLogs(false, logsBatchCount);
-            deviceLogs.add(new DeviceLog(mLogFormat.getFormattedMessage(Log.INFO, "Log Counts: " +
+            deviceLogs.add(new DeviceLog(mLogFormat.formatLogMessage(Log.INFO, "Log Counts: " +
                     deviceLogs.size() + " | File Size: " + deviceLogs.toString().length() + " bytes.")));
             //Get string data into byte format.
             byte[] bytes = Utils.getByteData(deviceLogs);
