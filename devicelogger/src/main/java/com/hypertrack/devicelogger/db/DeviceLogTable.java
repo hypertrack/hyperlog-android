@@ -40,9 +40,6 @@ import java.util.List;
  * Created by Aman on 20/09/17.
  */
 
-/**
- * package
- */
 class DeviceLogTable {
 
     private static final String TAG = DeviceLogTable.class.getSimpleName();
