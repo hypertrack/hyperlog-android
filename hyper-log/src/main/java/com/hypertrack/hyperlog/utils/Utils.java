@@ -22,14 +22,14 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-package com.hypertrack.devicelogger.db.Utils;
+package com.hypertrack.hyperlog.utils;
 
 import android.content.Context;
 import android.provider.Settings;
 import android.text.TextUtils;
 
-import com.hypertrack.devicelogger.db.DeviceLog;
-import com.hypertrack.devicelogger.db.HyperLog;
+import com.hypertrack.hyperlog.DeviceLogModel;
+import com.hypertrack.hyperlog.HyperLog;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -92,9 +92,9 @@ public class Utils {
         return device_uuid != null ? device_uuid : "";
     }
 
-    public static byte[] getByteData(List<DeviceLog> deviceLogs) {
+    public static byte[] getByteData(List<DeviceLogModel> deviceLogs) {
         StringBuilder stringBuilder = new StringBuilder();
-        for (DeviceLog deviceLog : deviceLogs) {
+        for (DeviceLogModel deviceLog : deviceLogs) {
             stringBuilder.append(deviceLog.getDeviceLog()).append("\n");
         }
         return stringBuilder.toString().getBytes();

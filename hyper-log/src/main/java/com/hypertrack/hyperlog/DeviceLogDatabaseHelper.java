@@ -22,7 +22,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-package com.hypertrack.devicelogger.db;
+package com.hypertrack.hyperlog;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -91,7 +91,7 @@ class DeviceLogDatabaseHelper extends SQLiteOpenHelper implements DeviceLogDataS
     }
 
     @Override
-    public void deleteDeviceLog(List<DeviceLog> deviceLogList) {
+    public void deleteDeviceLog(List<DeviceLogModel> deviceLogList) {
         // Initialize SQLiteDatabase if null
         initializeDatabase();
 
@@ -107,10 +107,10 @@ class DeviceLogDatabaseHelper extends SQLiteOpenHelper implements DeviceLogDataS
     }
 
     @Override
-    public List<DeviceLog> getDeviceLogs(int batch) {
+    public List<DeviceLogModel> getDeviceLogs(int batch) {
         // Initialize SQLiteDatabase if null
         initializeDatabase();
-        List<DeviceLog> deviceLogList = null;
+        List<DeviceLogModel> deviceLogList = null;
 
         try {
             deviceLogList = DeviceLogTable.getDeviceLogs(database,batch);

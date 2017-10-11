@@ -22,7 +22,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-package com.hypertrack.devicelogger.db.Utils;
+package com.hypertrack.hyperlog.utils;
 
 import android.content.Context;
 import android.text.TextUtils;
@@ -58,7 +58,7 @@ public class VolleyUtils {
         mRequestQueue.add(req);
     }
 
-    public static void cancelPendingRequests(Context context,Object tag) {
+    public static void cancelPendingRequests(Context context, Object tag) {
         if (mRequestQueue == null)
             getRequestQueue(context);
         mRequestQueue.cancelAll(tag);

@@ -26,7 +26,7 @@ SOFTWARE.
  * Created by Aman on 04/10/17.
  */
 
-package com.hypertrack.devicelogger.db;
+package com.hypertrack.hyperlog;
 
 import android.content.Context;
 import android.os.Build;
@@ -40,9 +40,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import com.hypertrack.devicelogger.db.Utils.CustomGson;
-import com.hypertrack.devicelogger.db.Utils.DateTimeUtility;
-import com.hypertrack.devicelogger.db.Utils.Utils;
+import com.hypertrack.hyperlog.utils.CustomGson;
+import com.hypertrack.hyperlog.utils.DateTimeUtility;
+import com.hypertrack.hyperlog.utils.Utils;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

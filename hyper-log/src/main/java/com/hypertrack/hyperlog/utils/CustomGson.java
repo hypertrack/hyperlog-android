@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package com.hypertrack.devicelogger.db.Utils;
+package com.hypertrack.hyperlog.utils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

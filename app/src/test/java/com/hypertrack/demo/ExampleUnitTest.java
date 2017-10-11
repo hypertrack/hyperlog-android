@@ -1,4 +1,4 @@
-package com.hypertrack.devicelogging;
+package com.hypertrack.demo;
 
 import org.junit.Test;
 

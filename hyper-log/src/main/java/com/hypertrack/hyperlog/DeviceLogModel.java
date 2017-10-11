@@ -22,28 +22,43 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-package com.hypertrack.devicelogger.db;
+package com.hypertrack.hyperlog;
 
-import android.support.annotation.NonNull;
-
-import com.android.volley.VolleyError;
+import com.google.gson.annotations.Expose;
 
 /**
- * Created by Aman Jain on 18/09/17.
+ * Created by Aman Jain on 22/09/17.
  */
-public abstract class HyperLogCallback {
+/** package */
+public class DeviceLogModel {
 
-    /**
-     * Called when a request succeeds.
-     *
-     * @param response The successful response containing the responseObject.
-     */
-    public abstract void onSuccess(@NonNull String response);
+    @Expose(serialize = false, deserialize = false)
+    private int id;
 
-    /**
-     * Called when a validation error occurs, request times out, or fails.
-     *
-     * @param errorResponse The request status.
-     */
-    public abstract void onError(@NonNull VolleyError errorResponse);
+    private String deviceLog;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getDeviceLog() {
+        return deviceLog;
+    }
+
+    public void setDeviceLog(String deviceLog) {
+        this.deviceLog = deviceLog;
+    }
+
+    public DeviceLogModel(String deviceLog) {
+        this.deviceLog = deviceLog;
+    }
+
+    public DeviceLogModel(int id, String deviceLog) {
+        this.id = id;
+        this.deviceLog = deviceLog;
+    }
 }

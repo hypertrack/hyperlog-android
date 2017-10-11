@@ -1,1 +1,1 @@
-include ':app', ':devicelogger'
+include ':app', ':hyper-log'

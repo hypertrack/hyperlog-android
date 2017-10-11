@@ -21,12 +21,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-package com.hypertrack.devicelogging;
+package com.hypertrack.demo;
 
 import android.app.Application;
 import android.util.Log;
 
-import com.hypertrack.devicelogger.db.HyperLog;
+import com.hypertrack.hyperlog.HyperLog;
 
 /**
  * Created by Aman on 04/10/17.

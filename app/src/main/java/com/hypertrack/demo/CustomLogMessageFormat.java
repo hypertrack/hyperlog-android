@@ -24,11 +24,11 @@ SOFTWARE.
 /**
  * Created by Aman on 04/10/17.
  */
-package com.hypertrack.devicelogging;
+package com.hypertrack.demo;
 
 import android.content.Context;
 
-import com.hypertrack.devicelogger.db.LogFormat;
+import com.hypertrack.hyperlog.LogFormat;
 
 class CustomLogMessageFormat extends LogFormat {
 

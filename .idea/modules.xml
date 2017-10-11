@@ -4,7 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/DeviceLogging.iml" filepath="$PROJECT_DIR$/DeviceLogging.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/devicelogger/devicelogger.iml" filepath="$PROJECT_DIR$/devicelogger/devicelogger.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hyper-log/hyper-log.iml" filepath="$PROJECT_DIR$/hyper-log/hyper-log.iml" />
     </modules>
   </component>
 </project>

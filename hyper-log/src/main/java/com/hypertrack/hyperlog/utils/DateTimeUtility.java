@@ -22,17 +22,21 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-package com.hypertrack.devicelogger.db.Utils;
+package com.hypertrack.hyperlog.utils;
 
 import android.text.TextUtils;
 
-import com.hypertrack.devicelogger.db.HyperLog;
+import com.hypertrack.hyperlog.HyperLog;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
+
+/**
+ * Created by Aman on 04/10/17.
+ */
 
 public class DateTimeUtility {
     private static final String TAG = DateTimeUtility.class.getSimpleName();

@@ -1,4 +1,4 @@
-package com.hypertrack.devicelogging;
+package com.hypertrack.demo;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

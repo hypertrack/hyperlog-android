@@ -22,7 +22,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-package com.hypertrack.devicelogger.db;
+package com.hypertrack.hyperlog;
 
 import android.text.TextUtils;
 
@@ -50,11 +50,11 @@ class DeviceLogList {
         this.mDeviceLogDataSource.deleteAllDeviceLogs();
     }
 
-    List<DeviceLog> getDeviceLogs(int batch) {
+    List<DeviceLogModel> getDeviceLogs(int batch) {
         return this.mDeviceLogDataSource.getDeviceLogs(batch);
     }
 
-    void clearDeviceLogs(List<DeviceLog> pushedDeviceLogs) {
+    void clearDeviceLogs(List<DeviceLogModel> pushedDeviceLogs) {
         if (pushedDeviceLogs == null || pushedDeviceLogs.isEmpty())
             return;
 

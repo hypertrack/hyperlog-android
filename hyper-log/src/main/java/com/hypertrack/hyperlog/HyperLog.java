@@ -23,7 +23,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package com.hypertrack.devicelogger.db;
+package com.hypertrack.hyperlog;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -32,9 +32,9 @@ import android.util.Log;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.hypertrack.devicelogger.db.Utils.DateTimeUtility;
-import com.hypertrack.devicelogger.db.Utils.Utils;
-import com.hypertrack.devicelogger.db.Utils.VolleyUtils;
+import com.hypertrack.hyperlog.utils.DateTimeUtility;
+import com.hypertrack.hyperlog.utils.Utils;
+import com.hypertrack.hyperlog.utils.VolleyUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -285,9 +285,9 @@ public class HyperLog {
     /**
      * Call this method to get a list of stored Device Logs
      *
-     * @return List of {@link DeviceLog}
+     * @return List of {@link DeviceLogModel}
      */
-    public static List<DeviceLog> getDeviceLogs() {
+    public static List<DeviceLogModel> getDeviceLogs() {
         return getDeviceLogs(true);
     }
 
@@ -295,9 +295,9 @@ public class HyperLog {
      * Call this method to get a list of stored Device Logs
      *
      * @param deleteLogs If true then logs will delete from the device.
-     * @return List of {@link DeviceLog}
+     * @return List of {@link DeviceLogModel}
      */
-    public static List<DeviceLog> getDeviceLogs(boolean deleteLogs) {
+    public static List<DeviceLogModel> getDeviceLogs(boolean deleteLogs) {
         return getDeviceLogs(deleteLogs, 1);
     }
 
@@ -307,10 +307,10 @@ public class HyperLog {
      * @param deleteLogs If true then logs will delete from the device.
      * @param batchNo    If there are more than one batch of device log then specify the batch number.
      *                   Batch number should be greater than or equal to 1.
-     * @return List of {@link DeviceLog} or empty list if batch number is greater than the {@link HyperLog#getDeviceLogBatchCount()}
+     * @return List of {@link DeviceLogModel} or empty list if batch number is greater than the {@link HyperLog#getDeviceLogBatchCount()}
      */
-    public static List<DeviceLog> getDeviceLogs(boolean deleteLogs, int batchNo) {
-        List<DeviceLog> deviceLogs = new ArrayList<>();
+    public static List<DeviceLogModel> getDeviceLogs(boolean deleteLogs, int batchNo) {
+        List<DeviceLogModel> deviceLogs = new ArrayList<>();
         if (!isInitialize())
             return deviceLogs;
 
@@ -367,14 +367,14 @@ public class HyperLog {
      * @param deviceLogList List of all device logs
      * @return List of {@link String}
      */
-    private static List<String> getDeviceLogsAsStringList(List<DeviceLog> deviceLogList) {
+    private static List<String> getDeviceLogsAsStringList(List<DeviceLogModel> deviceLogList) {
         List<String> logsList = new ArrayList<>();
 
         if (deviceLogList == null) {
             return logsList;
         }
 
-        for (DeviceLog deviceLog : deviceLogList) {
+        for (DeviceLogModel deviceLog : deviceLogList) {
             logsList.add(deviceLog.getDeviceLog());
         }
 
@@ -440,7 +440,7 @@ public class HyperLog {
         int logsBatchCount = getDeviceLogBatchCount();
 
         while (logsBatchCount != 0) {
-            List<DeviceLog> deviceLogList = getDeviceLogs(deleteLogs);
+            List<DeviceLogModel> deviceLogList = getDeviceLogs(deleteLogs);
 
             if (deviceLogList != null && !deviceLogList.isEmpty()) {
                 file = Utils.writeStringsToFile(mContext, getDeviceLogsAsStringList(deviceLogList), fileName);
@@ -588,8 +588,8 @@ public class HyperLog {
 
         while (logsBatchCount != 0) {
 
-            final List<DeviceLog> deviceLogs = getDeviceLogs(false, logsBatchCount);
-            deviceLogs.add(new DeviceLog(mLogFormat.formatLogMessage(Log.INFO, "Log Counts: " +
+            final List<DeviceLogModel> deviceLogs = getDeviceLogs(false, logsBatchCount);
+            deviceLogs.add(new DeviceLogModel(mLogFormat.formatLogMessage(Log.INFO, "Log Counts: " +
                     deviceLogs.size() + " | File Size: " + deviceLogs.toString().length() + " bytes.")));
             //Get string data into byte format.
             byte[] bytes = Utils.getByteData(deviceLogs);

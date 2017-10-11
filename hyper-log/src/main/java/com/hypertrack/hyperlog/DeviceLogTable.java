@@ -22,7 +22,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-package com.hypertrack.devicelogger.db;
+package com.hypertrack.hyperlog;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -30,7 +30,7 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 
-import com.hypertrack.devicelogger.db.Utils.DateTimeUtility;
+import com.hypertrack.hyperlog.utils.DateTimeUtility;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -130,12 +130,12 @@ class DeviceLogTable {
         }
     }
 
-    static void deleteDeviceLog(SQLiteDatabase db, List<DeviceLog> deviceLogList) {
+    static void deleteDeviceLog(SQLiteDatabase db, List<DeviceLogModel> deviceLogList) {
         if (db == null)
             return;
 
         StringBuilder builder = new StringBuilder();
-        for (DeviceLog deviceLog : deviceLogList) {
+        for (DeviceLogModel deviceLog : deviceLogList) {
             if (deviceLog != null && deviceLog.getId() > 0) {
                 builder.append(deviceLog.getId())
                         .append(",");
@@ -175,7 +175,7 @@ class DeviceLogTable {
         }
     }
 
-    static List<DeviceLog> getDeviceLogs(SQLiteDatabase db, int batch) {
+    static List<DeviceLogModel> getDeviceLogs(SQLiteDatabase db, int batch) {
         if (db == null) {
             return null;
         }
@@ -186,7 +186,7 @@ class DeviceLogTable {
             batch = 0;
         }
 
-        ArrayList<DeviceLog> deviceLogList = null;
+        ArrayList<DeviceLogModel> deviceLogList = null;
 
         String limit = String.valueOf(batch * DEVICE_LOG_REQUEST_QUERY_LIMIT) + ", " + String.valueOf(DEVICE_LOG_REQUEST_QUERY_LIMIT);
 
@@ -206,9 +206,9 @@ class DeviceLogTable {
 
                     String deviceLogString = cursor.getString(1);
                     if (!TextUtils.isEmpty(deviceLogString)) {
-                        DeviceLog deviceLog = new DeviceLog(deviceLogString);
+                        DeviceLogModel deviceLog = new DeviceLogModel(deviceLogString);
 
-                        // Get RowId for DeviceLog
+                        // Get RowId for DeviceLogModel
                         Integer rowId = Integer.valueOf(cursor.getString(0));
                         deviceLog.setId(rowId != null ? rowId : 0);
 

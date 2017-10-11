@@ -21,7 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-package com.hypertrack.devicelogging;
+package com.hypertrack.demo;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -35,8 +35,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
-import com.hypertrack.devicelogger.db.HyperLog;
-import com.hypertrack.devicelogger.db.HyperLogCallback;
+import com.hypertrack.hyperlog.HyperLog;
+import com.hypertrack.hyperlog.HyperLogCallback;
 
 import java.io.File;
 import java.util.ArrayList;

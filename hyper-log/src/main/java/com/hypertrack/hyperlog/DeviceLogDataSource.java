@@ -22,43 +22,26 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-package com.hypertrack.devicelogger.db;
+package com.hypertrack.hyperlog;
 
-import com.google.gson.annotations.Expose;
+import java.util.List;
 
 /**
- * Created by Aman Jain on 22/09/17.
+ * Created by Aman on 22/09/17.
  */
-/** package */
-public class DeviceLog {
 
-    @Expose(serialize = false, deserialize = false)
-    private int id;
+interface DeviceLogDataSource {
+    long getDeviceLogCount();
 
-    private String deviceLog;
+    void addDeviceLog(String deviceLog);
 
-    public int getId() {
-        return id;
-    }
+    void deleteDeviceLog(List<DeviceLogModel> deviceLogList);
 
-    public void setId(int id) {
-        this.id = id;
-    }
+    void deleteAllDeviceLogs();
 
-    public String getDeviceLog() {
-        return deviceLog;
-    }
+    List<DeviceLogModel> getDeviceLogs(int batch);
 
-    public void setDeviceLog(String deviceLog) {
-        this.deviceLog = deviceLog;
-    }
+    int getDeviceLogBatchCount();
 
-    public DeviceLog(String deviceLog) {
-        this.deviceLog = deviceLog;
-    }
-
-    public DeviceLog(int id, String deviceLog) {
-        this.id = id;
-        this.deviceLog = deviceLog;
-    }
+    void clearOldLogs(int expiryTimeInSeconds);
 }
