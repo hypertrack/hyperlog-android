@@ -29,7 +29,7 @@ import android.provider.Settings;
 import android.text.TextUtils;
 
 import com.hypertrack.devicelogger.db.DeviceLog;
-import com.hypertrack.devicelogger.db.SmartLog;
+import com.hypertrack.devicelogger.db.HyperLog;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -53,7 +53,7 @@ public class Utils {
             String dirPath = context.getExternalFilesDir(null).getAbsolutePath() + "/LogFiles";
 
             if (TextUtils.isEmpty(dirPath)) {
-                SmartLog.e(TAG, "Error occurred while getting directory");
+                HyperLog.e(TAG, "Error occurred while getting directory");
                 return null;
             }
 
@@ -61,7 +61,7 @@ public class Utils {
             File filePath = new File(dirPath);
             if (!filePath.exists()) {
                 if (!filePath.mkdirs()) {
-                    SmartLog.e(TAG, "Error occurred while creating file.");
+                    HyperLog.e(TAG, "Error occurred while creating file.");
                     return null;
                 }
             }
@@ -74,7 +74,7 @@ public class Utils {
             return logFile;
 
         } catch (Exception e) {
-            SmartLog.exception(TAG, e);
+            HyperLog.exception(TAG, e);
         }
         return null;
     }

@@ -26,7 +26,7 @@ package com.hypertrack.devicelogger.db.Utils;
 
 import android.text.TextUtils;
 
-import com.hypertrack.devicelogger.db.SmartLog;
+import com.hypertrack.devicelogger.db.HyperLog;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -50,7 +50,7 @@ public class DateTimeUtility {
             dateFormat.setTimeZone(TimeZone.getTimeZone(HT_TIMEZONE_UTC));
             currentTime = dateFormat.format(new Date());
         } catch (Exception e) {
-            SmartLog.e(TAG, "Exception while getCurrentTime: " + e);
+            HyperLog.e(TAG, "Exception while getCurrentTime: " + e);
             currentTime = "";
         }
         return currentTime != null ? currentTime : "";
@@ -66,7 +66,7 @@ public class DateTimeUtility {
             dateFormat.setTimeZone(TimeZone.getTimeZone(HT_TIMEZONE_UTC));
             return dateFormat.format(date);
         } catch (Exception e) {
-            SmartLog.e(TAG, "Exception while getFormattedTime: " + e);
+            HyperLog.e(TAG, "Exception while getFormattedTime: " + e);
         }
 
         return getCurrentTime();
@@ -81,7 +81,7 @@ public class DateTimeUtility {
             format.setTimeZone(TimeZone.getTimeZone(HT_TIMEZONE_UTC));
             return format.parse(time);
         } catch (Exception e) {
-            SmartLog.e(TAG, "Exception while getFormattedDate: " + e);
+            HyperLog.e(TAG, "Exception while getFormattedDate: " + e);
         }
 
         return new Date();

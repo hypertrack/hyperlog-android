@@ -12,8 +12,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
-import com.hypertrack.devicelogger.db.SmartLog;
-import com.hypertrack.devicelogger.db.SmartLogCallback;
+import com.hypertrack.devicelogger.db.HyperLog;
+import com.hypertrack.devicelogger.db.HyperLogCallback;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //Set Custom Log Message Format.
-        SmartLog.setLogFormat(new CustomLog(this));
+        HyperLog.setLogFormat(new CustomLog(this));
         editText = (EditText) findViewById(R.id.logText);
         listView = (ListView) findViewById(R.id.listView);
         listAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, logsList);
@@ -47,14 +47,14 @@ public class MainActivity extends AppCompatActivity {
 
     public void showLogs(View view) {
         logsList.clear();
-        logsList.addAll(SmartLog.getDeviceLogsAsStringList(false));
+        logsList.addAll(HyperLog.getDeviceLogsAsStringList(false));
         listAdapter.notifyDataSetChanged();
         batchNumber = 1;
     }
 
     public void addLog(View view) {
         if (!TextUtils.isEmpty(editText.getText().toString())) {
-            SmartLog.i(TAG, editText.getText().toString());
+            HyperLog.i(TAG, editText.getText().toString());
             editText.getText().clear();
             editText.setText(logs[count++]);
             showLogs(view);
@@ -63,14 +63,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void getFile(View view) {
-        File file = SmartLog.getDeviceLogsInFile(this, false);
+        File file = HyperLog.getDeviceLogsInFile(this, false);
         if (file != null && file.exists())
             showToast("File Created at: " + file.getAbsolutePath());
     }
 
     public void deleteLogs(View view) {
         showToast("Logs deleted");
-        SmartLog.deleteLogs();
+        HyperLog.deleteLogs();
         logsList.clear();
         listAdapter.notifyDataSetChanged();
 
@@ -78,13 +78,13 @@ public class MainActivity extends AppCompatActivity {
 
     public void nextLog(View view) {
         logsList.clear();
-        logsList.addAll(SmartLog.getDeviceLogsAsStringList(false, ++batchNumber));
+        logsList.addAll(HyperLog.getDeviceLogsAsStringList(false, ++batchNumber));
         listAdapter.notifyDataSetChanged();
     }
 
     public void pushLog(View view) {
 
-        SmartLog.pushLogs(this, false, new SmartLogCallback() {
+        HyperLog.pushLogs(this, false, new HyperLogCallback() {
             @Override
             public void onSuccess(@NonNull String response) {
                 showToast("Log Pushed");

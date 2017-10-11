@@ -15,7 +15,7 @@ import com.hypertrack.devicelogger.db.Utils.DateTimeUtility;
  * This class can be overridden to customise the log message format.
  * <br>
  * An instance of LogFormat needs to be passed to the method
- * {@link SmartLog#setLogFormat(LogFormat)} as parameter.
+ * {@link HyperLog#setLogFormat(LogFormat)} as parameter.
  * */
 public class LogFormat {
 

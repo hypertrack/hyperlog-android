@@ -31,7 +31,7 @@ import com.android.volley.VolleyError;
 /**
  * Created by Aman Jain on 18/02/17.
  */
-public abstract class SmartLogCallback {
+public abstract class HyperLogCallback {
 
     /**
      * Called when a request succeeds.

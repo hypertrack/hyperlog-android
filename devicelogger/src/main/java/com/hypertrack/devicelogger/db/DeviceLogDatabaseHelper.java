@@ -65,13 +65,13 @@ class DeviceLogDatabaseHelper extends SQLiteOpenHelper implements DeviceLogDataS
     @Override
     public void onCreate(SQLiteDatabase db) {
         DeviceLogTable.onCreate(db);
-        SmartLog.i(TAG, "DeviceLogDatabaseHelper onCreate called.");
+        HyperLog.i(TAG, "DeviceLogDatabaseHelper onCreate called.");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         DeviceLogTable.onUpgrade(db, oldVersion, newVersion);
-        SmartLog.i(TAG, "DeviceLogDatabaseHelper onUpgrade called.");
+        HyperLog.i(TAG, "DeviceLogDatabaseHelper onUpgrade called.");
     }
 
     @Override

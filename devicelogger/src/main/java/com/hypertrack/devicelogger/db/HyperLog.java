@@ -44,9 +44,9 @@ import java.util.List;
 /**
  * Created by Aman on 04/09/17.
  */
-public class SmartLog {
+public class HyperLog {
 
-    private static final String TAG = "SmartLog";
+    private static final String TAG = "HyperLog";
     private static int logLevel = Log.WARN;
     private static DeviceLogList mDeviceLogList;
     private static String URL;
@@ -54,7 +54,7 @@ public class SmartLog {
     private static LogFormat mLogFormat;
 
     /**
-     * Call this method to initialize SmartLog.
+     * Call this method to initialize HyperLog.
      * By default, seven days older logs will gets deleted automatically.
      *
      * @param context The current context.
@@ -65,7 +65,7 @@ public class SmartLog {
     }
 
     /**
-     * Call this method to initialize SmartLog.
+     * Call this method to initialize HyperLog.
      * By default, seven days older logs will gets deleted automatically.
      *
      * @param context   The current context.
@@ -77,7 +77,7 @@ public class SmartLog {
     }
 
     /**
-     * Call this method to initialize SmartLog.
+     * Call this method to initialize HyperLog.
      * By default, seven days older logs will gets deleted automatically.
      *
      * @param context             The current context.
@@ -89,7 +89,7 @@ public class SmartLog {
     }
 
     /**
-     * Call this method to initialize SmartLog.
+     * Call this method to initialize HyperLog.
      * By default, seven days older logs will get expire automatically. You can change the expiry period of logs by defining expiryTimeInSeconds.
      *
      * @param context             The current context.
@@ -102,7 +102,7 @@ public class SmartLog {
             throw new IllegalArgumentException("Context cannot be null.");
 
         if (mDeviceLogList == null) {
-            synchronized (SmartLog.class) {
+            synchronized (HyperLog.class) {
                 if (mDeviceLogList == null) {
                     if (logFormat != null)
                         mLogFormat = logFormat;
@@ -127,7 +127,7 @@ public class SmartLog {
 
     private static boolean isInitialize() {
         if (mDeviceLogList == null) {
-            SmartLog.e(TAG, "Smart Log isn't initialized.");
+            HyperLog.e(TAG, "HyperLog isn't initialized.");
             return false;
         }
 
@@ -163,7 +163,7 @@ public class SmartLog {
      * @param logLevel The level of logcat logging that Parse should do.
      */
     public static void setLogLevel(int logLevel) {
-        SmartLog.logLevel = logLevel;
+        HyperLog.logLevel = logLevel;
     }
 
     public static void v(String tag, String message, Throwable tr) {
@@ -307,7 +307,7 @@ public class SmartLog {
      * @param deleteLogs If true then logs will delete from the device.
      * @param batchNo    If there are more than one batch of device log then specify the batch number.
      *                   Batch number should be greater than or equal to 1.
-     * @return List of {@link DeviceLog} or empty list if batch number is greater than the {@link SmartLog#getDeviceLogBatchCount()}
+     * @return List of {@link DeviceLog} or empty list if batch number is greater than the {@link HyperLog#getDeviceLogBatchCount()}
      */
     public static List<DeviceLog> getDeviceLogs(boolean deleteLogs, int batchNo) {
         List<DeviceLog> deviceLogs = new ArrayList<>();
@@ -347,7 +347,7 @@ public class SmartLog {
      *
      * @param deleteLogs If true then logs will delete from the device.
      * @param batchNo    If there are more than one batch of device log then specify the batch number. Batch number should be greater than or equal to 1.
-     * @return List of {@link String} or if the given batchNo is greater than the {@link SmartLog#getDeviceLogBatchCount()} then returns empty list;
+     * @return List of {@link String} or if the given batchNo is greater than the {@link HyperLog#getDeviceLogBatchCount()} then returns empty list;
      */
     public static List<String> getDeviceLogsAsStringList(boolean deleteLogs, int batchNo) {
         List<String> logsList = new ArrayList<>();
@@ -447,7 +447,7 @@ public class SmartLog {
                 if (file != null) {
                     if (deleteLogs)
                         mDeviceLogList.clearDeviceLogs(deviceLogList);
-                    SmartLog.i(TAG, "Log File has been created at " + file.getAbsolutePath());
+                    HyperLog.i(TAG, "Log File has been created at " + file.getAbsolutePath());
                 }
             }
             logsBatchCount--;
@@ -502,10 +502,10 @@ public class SmartLog {
      *
      * @param mContext The current context.
      * @param compress True, if logs will push to server in GZIP compressed format, false otherwise.
-     * @param callback Instance of {@link SmartLogCallback}.
+     * @param callback Instance of {@link HyperLogCallback}.
      * @throws IllegalArgumentException if the API endpoint url is empty or null
      */
-    public static void pushLogs(Context mContext, boolean compress, SmartLogCallback callback) {
+    public static void pushLogs(Context mContext, boolean compress, HyperLogCallback callback) {
         pushLogs(mContext, null, null, compress, callback);
     }
 
@@ -520,10 +520,10 @@ public class SmartLog {
      * @param mContext The current context.
      * @param fileName Name of the file that you want to receive on your server.
      * @param compress True, if logs will push to server in GZIP compressed format, false otherwise.
-     * @param callback Instance of {@link SmartLogCallback}.
+     * @param callback Instance of {@link HyperLogCallback}.
      * @throws IllegalArgumentException if the API endpoint url is empty or null
      */
-    public static void pushLogs(Context mContext, String fileName, boolean compress, SmartLogCallback callback) {
+    public static void pushLogs(Context mContext, String fileName, boolean compress, HyperLogCallback callback) {
         pushLogs(mContext, fileName, null, compress, callback);
     }
 
@@ -538,11 +538,11 @@ public class SmartLog {
      * @param mContext          The current context.
      * @param additionalHeaders Additional Headers to pass along with request.
      * @param compress          True, if logs will push to server in GZIP compressed format, false otherwise.
-     * @param callback          Instance of {@link SmartLogCallback}.
+     * @param callback          Instance of {@link HyperLogCallback}.
      * @throws IllegalArgumentException if the API endpoint url is empty or null
      */
     public static void pushLogs(Context mContext, HashMap<String, String> additionalHeaders, boolean compress,
-                                SmartLogCallback callback) {
+                                HyperLogCallback callback) {
         pushLogs(mContext, null, additionalHeaders, compress, callback);
     }
 
@@ -558,23 +558,23 @@ public class SmartLog {
      * @param mContext          The current context.
      * @param additionalHeaders Additional Headers to pass along with request.
      * @param compress          True, if logs will push to server in GZIP compressed format, false otherwise.
-     * @param callback          Instance of {@link SmartLogCallback}.
+     * @param callback          Instance of {@link HyperLogCallback}.
      * @throws IllegalArgumentException if the API endpoint url is empty or null
      */
     public static void pushLogs(Context mContext, String fileName, HashMap<String, String> additionalHeaders,
-                                boolean compress, final SmartLogCallback callback) {
+                                boolean compress, final HyperLogCallback callback) {
 
         if (!isInitialize())
             return;
 
         if (TextUtils.isEmpty(URL)) {
-            throw new IllegalArgumentException("API endpoint URL is missing. Set URL using SmartLog.setURL method");
+            throw new IllegalArgumentException("API endpoint URL is missing. Set URL using HyperLog.setURL method");
         }
 
         VolleyUtils.cancelPendingRequests(mContext, TAG);
 
         if (TextUtils.isEmpty(URL)) {
-            SmartLog.e(TAG, "URL is missing. Please set the URL to push the logs.");
+            HyperLog.e(TAG, "URL is missing. Please set the URL to push the logs.");
             return;
         }
         if (!hasPendingDeviceLogs())
@@ -604,7 +604,7 @@ public class SmartLog {
                 public void onResponse(String response) {
                     temp[0]--;
                     mDeviceLogList.clearDeviceLogs(deviceLogs);
-                    SmartLog.i(TAG, "Log has been pushed");
+                    HyperLog.i(TAG, "Log has been pushed");
 
                     if (callback != null && temp[0] == 0) {
                         if (isAllLogsPushed[0]) {
@@ -621,7 +621,7 @@ public class SmartLog {
                     isAllLogsPushed[0] = false;
                     temp[0]--;
                     error.printStackTrace();
-                    SmartLog.exception(TAG, "Error has occurred while pushing logs: ", error);
+                    HyperLog.exception(TAG, "Error has occurred while pushing logs: ", error);
 
                     if (temp[0] == 0) {
                         if (callback != null) {

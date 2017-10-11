@@ -35,25 +35,25 @@ dependencies {
 ## Initialize
 Inside `onCreate` of Application class or Launcher Activity. 
 ```
-SmartLog.initialize(this);
-SmartLog.setLogLevel(Log.VERBOSE);
+HyperLog.initialize(this);
+HyperLog.setLogLevel(Log.VERBOSE);
 ```
 
 ## Usage
 ```
-SmartLog.d(TAG,"Debug Log");
+HyperLog.d(TAG,"Debug Log");
 ```
 
 ## Get Logs in a File
 ```
-File file = SmartLog.getDeviceLogsInFile(this);
+File file = HyperLog.getDeviceLogsInFile(this);
 ```
 
 ## Push Logs to Server
-Set the API Endpoint URL `SmartLog.setURL` before calling `SmartLog.pushLogs` method otherwise `exception` will be thrown.
+Set the API Endpoint URL `HyperLog.setURL` before calling `HyperLog.pushLogs` method otherwise `exception` will be thrown.
 ```
-SmartLog.setURL("API URL");
-SmartLog.pushLogs(this, false, new SmartLogCallback() {
+HyperLog.setURL("API URL");
+HyperLog.pushLogs(this, false, new HyperLogCallback() {
             @Override
             public void onSuccess(@NonNull String response) {
 
@@ -75,14 +75,14 @@ SmartLog.pushLogs(this, false, new SmartLogCallback() {
 
 Use [`RequestBin`](https://requestb.in/) to push the logs.
 * Visit the [`RequestBin`](https://requestb.in/) site and create a `RequestBin`.
-* Once you have the bin created, copy the URL and set it to the `SmartLog.setURL`.
-* After `SmartLog.pushLogs` reload the related view page to view exactly which requests were made, what headers were sent, and raw body and so on, all in a pretty graphical setting like above image.
+* Once you have the bin created, copy the URL and set it to the `HyperLog.setURL`.
+* After `HyperLog.pushLogs` reload the related view page to view exactly which requests were made, what headers were sent, and raw body and so on, all in a pretty graphical setting like above image.
 * Once you get the logs on `RequestBin` create your own endpoint on your server and start receiving logs on to your server for debugging.
 
 **Note:** 
 * Push logs to server in compressed form to reduce the data consumption and response time.
 ```
-SmartLog.pushLogs(Context mContext, boolean compress, SmartLogCallback callback);
+HyperLog.pushLogs(Context mContext, boolean compress, HyperLogCallback callback);
 ```
 * Logs will be compressed using `GZIP` encoding.
 * Logs will be deleted from database after successful push.
@@ -112,60 +112,60 @@ class CustomLogMessage extends LogFormat {
 }
 
 ```
-4. Above created class instance then needs to be passed while initializing `SmartLog` or can be set later.
+4. Above created class instance then needs to be passed while initializing `HyperLog` or can be set later.
 ```
-SmartLog.initialize(this,new CustomLog(this));
+HyperLog.initialize(this,new CustomLog(this));
  
 OR
  
-SmartLog.initialize(this);
-SmartLog.setLogFormat(new CustomLog(this));
+HyperLog.initialize(this);
+HyperLog.setLogFormat(new CustomLog(this));
 ```
 ## Additional Methods
 * Different types of log.
 ```
-SmartLog.d(TAG,"debug");
-SmartLog.i(TAG,"information");
-SmartLog.e(TAG,"error");
-SmartLog.v(TAG,"verbose");
-SmartLog.w(TAG,"warning");
-SmartLog.a(TAG,"assert");
-SmartLog.exception(TAG,"exception",throwable);
+HyperLog.d(TAG,"debug");
+HyperLog.i(TAG,"information");
+HyperLog.e(TAG,"error");
+HyperLog.v(TAG,"verbose");
+HyperLog.w(TAG,"warning");
+HyperLog.a(TAG,"assert");
+HyperLog.exception(TAG,"exception",throwable);
 ```
 
 * To check whether any device logs are available.
 ```
-SmartLog.hasPendingDeviceLogs();
+HyperLog.hasPendingDeviceLogs();
 ```
 
 * Get the count of stored device logs.
 ```
-SmartLog.logCount();
+HyperLog.logCount();
 ```
 
 * Developer can pass additional headers along with API call while pushing logs to server.
 ```
 HashMap<String, String> additionalHeaders = new HashMap<>();
 additionalHeaders.put("Authorization","Token");
-SmartLog.pushLogs(this, additionalHeaders, false, smartLogCallback);
+HyperLog.pushLogs(this, additionalHeaders, false, hyperLogCallback);
 ```
 
 * By default, seven days older logs will get delete automatically from the database. You can change the expiry period of logs by defining `expiryTimeInSeconds`.
 ```
-SmartLog.initialize(@NonNull Context context, int expiryTimeInSeconds);
+HyperLog.initialize(@NonNull Context context, int expiryTimeInSeconds);
 ```
 * Developers can also get the device log as a list of `DeviceLog` model or list of `String` .By default, fetched logs will delete from the database. Developers can override to change the default functionality.
 ```
-SmartLog.getDeviceLogs(boolean deleteLogs);
-SmartLog.getDeviceLogsInFile(Context mContext, boolean deleteLogs);
+HyperLog.getDeviceLogs(boolean deleteLogs);
+HyperLog.getDeviceLogsInFile(Context mContext, boolean deleteLogs);
 ```
 * By default, every get calls return data from first batch if there are one or more batch.
 * If there are more than one batches then developer can gets the specific batch data by providing batch number.
 ```
-SmartLog.getDeviceLogs(boolean deleteLogs, int batchNo);
+HyperLog.getDeviceLogs(boolean deleteLogs, int batchNo);
 ```
-* Get the number of batches using `SmartLog.getDeviceLogBatchCount`.
-* Developer can manually delete the logs `SmartLog.deleteLogs`.
+* Get the number of batches using `HyperLog.getDeviceLogBatchCount`.
+* Developer can manually delete the logs `HyperLog.deleteLogs`.
 
 ## Contribute
 Please use the [issues tracker](https://github.com/hypertrack/smart-logging-android/issues) to raise bug reports and feature requests. We'd love to see your pull requests, so send them in!

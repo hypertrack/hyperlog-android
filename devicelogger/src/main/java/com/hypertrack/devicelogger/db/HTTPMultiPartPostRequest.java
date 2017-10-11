@@ -42,7 +42,7 @@ class HTTPMultiPartPostRequest<T> extends Request<T> {
     private final HashMap<String, String> additionalHeaders;
     private static final String HEADER_ENCODING = "Content-Encoding";
     private static final String ENCODING_GZIP = "gzip";
-    private final String boundary = "SmartLog -" + System.currentTimeMillis();
+    private final String boundary = "HyperLog -" + System.currentTimeMillis();
 
     private boolean mGzipEnabled = false;
 
@@ -76,10 +76,10 @@ class HTTPMultiPartPostRequest<T> extends Request<T> {
                 return compressed;
 
             } catch (Exception exception) {
-                SmartLog.e(TAG, "Exception occurred while getCompressed: " + exception);
+                HyperLog.e(TAG, "Exception occurred while getCompressed: " + exception);
                 mGzipEnabled = false;
             } catch (OutOfMemoryError error) {
-                SmartLog.e(TAG, "OutOfMemory Error occurred while getCompressed: " + error);
+                HyperLog.e(TAG, "OutOfMemory Error occurred while getCompressed: " + error);
                 mGzipEnabled = false;
             }
         }
@@ -90,14 +90,14 @@ class HTTPMultiPartPostRequest<T> extends Request<T> {
     private byte[] getRequestBody(byte[] requestBody) {
         byte[] compressedRequestBody = getCompressed(requestBody);
         if (mGzipEnabled) {
-            SmartLog.i(TAG, "Compressed FileSize: " + compressedRequestBody.length + " Bytes");
+            HyperLog.i(TAG, "Compressed FileSize: " + compressedRequestBody.length + " Bytes");
             return compressedRequestBody;
         } else {
             try {
-                SmartLog.i(TAG, "Compressed FileSize: " + requestBody.length + " Bytes");
+                HyperLog.i(TAG, "Compressed FileSize: " + requestBody.length + " Bytes");
                 return requestBody;
             } catch (Exception exception) {
-                SmartLog.e(TAG, "Exception occurred while getRequestBody: " + exception);
+                HyperLog.e(TAG, "Exception occurred while getRequestBody: " + exception);
             }
         }
         return null;
@@ -126,7 +126,7 @@ class HTTPMultiPartPostRequest<T> extends Request<T> {
             is.close();
             return string.toString();
         } catch (Exception exception) {
-            SmartLog.e(TAG, "Exception occurred while getDecompressed: " + exception);
+            HyperLog.e(TAG, "Exception occurred while getDecompressed: " + exception);
         }
         return null;
     }
@@ -166,11 +166,11 @@ class HTTPMultiPartPostRequest<T> extends Request<T> {
             String json = new String(
                     volleyError.networkResponse.data, HttpHeaderParser.parseCharset(volleyError.networkResponse.headers));
 
-            SmartLog.i(TAG, "Status Code: " + volleyError.networkResponse.statusCode +
+            HyperLog.i(TAG, "Status Code: " + volleyError.networkResponse.statusCode +
                     " Data: " + json);
 
         } catch (Exception e) {
-            SmartLog.e(TAG, "Exception occurred while HTTPPatchRequest parseNetworkError: " + e, e);
+            HyperLog.e(TAG, "Exception occurred while HTTPPatchRequest parseNetworkError: " + e, e);
         }
 
         return super.parseNetworkError(volleyError);
@@ -194,7 +194,7 @@ class HTTPMultiPartPostRequest<T> extends Request<T> {
 
     @Override
     protected void deliverResponse(T response) {
-        SmartLog.i(TAG, "deliverResponse: ");
+        HyperLog.i(TAG, "deliverResponse: ");
         if(mListener != null && mListener.get() != null)
         mListener.get().onResponse(response);
     }
