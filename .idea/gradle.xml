@@ -8,8 +8,8 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/hyper-log" />
+            <option value="$PROJECT_DIR$/hyperlog" />
+            <option value="$PROJECT_DIR$/hyperlog-demo" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

@@ -1,1 +1,1 @@
-include ':app', ':hyper-log'
+include ':hyperlog-demo', ':hyperlog'

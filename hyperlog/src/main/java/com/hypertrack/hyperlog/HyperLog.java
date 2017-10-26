@@ -386,7 +386,7 @@ public class HyperLog {
      * A text file will create in the app folder containing all logs with the current date time as name of the file.
      *
      * @param mContext The current context.
-     * @return {@link File} object or {@code null if there is not any logs in device.
+     * @return {@link File} object or {@code null} if there is not any logs in device.
      */
     public static File getDeviceLogsInFile(Context mContext) {
         return getDeviceLogsInFile(mContext, null);
@@ -398,7 +398,7 @@ public class HyperLog {
      *
      * @param mContext   The current context.
      * @param deleteLogs If true then logs will delete from the device.
-     * @return {@link File} object or {@code null if there is not any logs in device.
+     * @return {@link File} object or {@code null} if there is not any logs in device.
      */
     public static File getDeviceLogsInFile(Context mContext, boolean deleteLogs) {
         return getDeviceLogsInFile(mContext, null, deleteLogs);
@@ -409,7 +409,8 @@ public class HyperLog {
      * A text file will create in the app folder containing all logs with the current date time as name of the file.
      *
      * @param mContext The current context.
-     * @return {@link File} object or {@code null if there is not any logs in device.
+     * @param fileName   Name of the file.
+     * @return {@link File} object or {@code null} if there is not any logs in device.
      */
     public static File getDeviceLogsInFile(Context mContext, String fileName) {
         return getDeviceLogsInFile(mContext, fileName, true);
@@ -422,7 +423,7 @@ public class HyperLog {
      * @param mContext   The current context.
      * @param fileName   Name of the file.
      * @param deleteLogs If true then logs will delete from the device.
-     * @return {@link File} object, or {@code null if there is not any logs in device.
+     * @return {@link File} object, or {@code null} if there is not any logs in device.
      */
     public static File getDeviceLogsInFile(Context mContext, String fileName, boolean deleteLogs) {
 

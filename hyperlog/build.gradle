@@ -1,0 +1,96 @@
+apply plugin: 'com.android.library'
+apply plugin: 'maven'
+
+ext {
+    bintrayRepo = 'maven'
+    bintrayName = 'hyperlog-android'
+
+    publishedGroupId = 'com.hypertrack'
+    libraryName = 'hyperlog'
+    artifact = 'hyperlog'
+
+    libraryDescription = 'A utility logger library for Android on top of standard Android Log class for debugging purpose. This is a simple library that will allow Android apps or library to store log into database so that developer can pull the logs from the database into File or push the logs to your remote server for debugging purpose.'
+
+    siteUrl = 'https://github.com/hypertrack/hyperlog-android'
+    gitUrl = 'https://github.com/hypertrack/hyperlog-android.git'
+
+    libraryVersion = computeVersionName()
+
+    developerId = 'piyushgupta27'
+    developerName = 'Piyush Gupta'
+    developerEmail = 'piyush@hypertrack.io'
+
+    licenseName = 'The MIT License (MIT)'
+    licenseUrl = 'http://opensource.org/licenses/MIT'
+    allLicenses = ["MIT"]
+}
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.3"
+
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.volley:volley:1.0.0'
+    compile 'com.google.code.gson:gson:2.7'
+    testCompile 'junit:junit:4.12'
+}
+
+def computeVersionName() {
+    def versionPropsFile = file('gradle.properties')
+
+    if (versionPropsFile.canRead()) {
+        def Properties versionProps = new Properties()
+
+        versionProps.load(new FileInputStream(versionPropsFile))
+
+        def value = 0
+
+        def runTasks = gradle.startParameter.taskNames
+        if ('internalRelease' in runTasks || 'iR' in runTasks) {
+            value = 1;
+        }
+
+        def versionMajor = 0
+        def versionMinor = 0
+        def versionPatch = versionProps['VERSION_PATCH'].toInteger() + value
+        def versionBuild = versionProps['VERSION_BUILD'].toInteger() + 1
+
+        versionProps['VERSION_PATCH'] = versionPatch.toString()
+        versionProps['VERSION_BUILD'] = versionBuild.toString()
+        versionProps['version'] = versionMajor + "." + versionMinor + "." + versionPatch
+        versionProps.store(versionPropsFile.newWriter(), null)
+
+        return versionMajor + "." + versionMinor + "." + versionPatch
+    } else {
+        throw new GradleException("Could not read version.properties!")
+    }
+}
+
+if (project.rootProject.file('local.properties').exists()) {
+    apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
+    apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'
+}

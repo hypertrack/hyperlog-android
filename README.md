@@ -3,7 +3,7 @@
 [![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://opensource.org/licenses/MIT) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Download](https://api.bintray.com/packages/piyushgupta27/maven/smart-scheduler/images/download.svg) ](https://bintray.com/piyushgupta27/maven/smart-scheduler/_latestVersion)
 ## Overview
-A utility logger library for Android on top of standard Android `Log` class for debugging purpose. This is a simple library that will allow Android apps or library to store `log` into `database` so that developer can pull the logs from the database into `File` or push the logs to your `remote server` for `debugging` purpose.
+A utility logger library for Android on top of standard Android `Log` class for debugging purpose. This is a simple library that will allow Android apps or library to store `log` into `database` so that developer can pull the logs from the database into `File` or push the logs to your `remote server` for `debugging` purpose. Want to know more on this and wondering why you should prefer using this library over doing it yourself. Check out the blog post.
 
 <p align="center">
 <kbd>
@@ -27,7 +27,7 @@ The library is available on `mavenCentral()` and `jcenter()`. In your module's `
 ```
 dependencies {
     ...
-    compile 'io.hypertrack:smart-scheduler:0.0.8'
+    compile 'io.hypertrack:hyperlog:0.0.1'
     ...
 }
 ```
@@ -93,7 +93,7 @@ HyperLog.pushLogs(this, false, new HyperLogCallback() {
 </p>
 
 **Note:** 
-* Push logs to server in compressed form to reduce the data consumption and response time.
+* Push logs file to server in compressed form to reduce the data consumption and response time.
 ```
 HyperLog.pushLogs(Context mContext, boolean compress, HyperLogCallback callback);
 ```
@@ -111,7 +111,7 @@ timeStamp + " | " + appVersion + " : " + osVersion + " | " + deviceUUID + " | ["
 ```
 This message can easily be customize.
 1. Create a new class extending `LogFormat`.
-2. Override `getFormattedMessage` method.
+2. Override `getFormattedLogMessage` method.
 3. Now return the formatted message.
 ```
 class CustomLogMessageFormat extends LogFormat {
@@ -124,9 +124,9 @@ class CustomLogMessageFormat extends LogFormat {
                                          String senderName, String osVersion, String deviceUUID) {
                                          
         //Custom Log Message Format                                
-        String customLogFormat = timeStamp + " : " + logLevelName + " : " + deviceUUID + " : " + message;
+        String formattedMessage = timeStamp + " : " + logLevelName + " : " + deviceUUID + " : " + message;
         
-        return customLogFormat;
+        return formattedMessage;
     }
 }
 
@@ -139,12 +139,12 @@ Custom Log Message Format example
 
 4. Above created class instance then needs to be passed while initializing `HyperLog` or can be set later.
 ```
-HyperLog.initialize(this,new CustomLog(this));
+HyperLog.initialize(this,new CustomLogMessageFormat(this));
  
 OR
  
 HyperLog.initialize(this);
-HyperLog.setLogFormat(new CustomLog(this));
+HyperLog.setLogFormat(new CustomLogMessageFormat(this));
 ```
 ## Additional Methods
 * Different types of log.
@@ -190,10 +190,10 @@ HyperLog.getDeviceLogsInFile(Context mContext, boolean deleteLogs);
 HyperLog.getDeviceLogs(boolean deleteLogs, int batchNo);
 ```
 * Get the number of batches using `HyperLog.getDeviceLogBatchCount`.
-* Developer can manually delete the logs `HyperLog.deleteLogs`.
+* Developer can manually delete the logs using `HyperLog.deleteLogs`.
 
 ## Contribute
-Please use the [issues tracker](https://github.com/hypertrack/hyper-log-android/issues) to raise bug reports and feature requests. We'd love to see your pull requests, so send them in!
+Please use the [issues tracker](https://github.com/hypertrack/hyperlog-android/issues) to raise bug reports and feature requests. We'd love to see your pull requests, so send them in!
 
 ## About HyperTrack
 Developers use [HyperTrack](https://www.hypertrack.com) to build location features, not infrastructure. We reduce the complexity of building and operating location features to a few APIs that just work.
