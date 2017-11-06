@@ -21,13 +21,13 @@ timeStamp + " | " + appVersion + " : " + osVersion + " | " + deviceUUID + " | ["
 ## Download
 Download the latest version or grab via Gradle.
 
-The library is available on `mavenCentral()` and `jcenter()`. In your module's `build.gradle`, add the following code snippet and run the `gradle-sync`.
+The library is available on [`mavenCentral()`](https://dl.bintray.com/piyushgupta27/maven/com/hypertrack/hyperlog/) and `jcenter()`. In your module's `build.gradle`, add the following code snippet and run the `gradle-sync`.
 
 
 ```
 dependencies {
     ...
-    compile 'io.hypertrack:hyperlog:0.0.1'
+    compile 'com.hypertrack:hyperlog:0.0.5'
     ...
 }
 ```

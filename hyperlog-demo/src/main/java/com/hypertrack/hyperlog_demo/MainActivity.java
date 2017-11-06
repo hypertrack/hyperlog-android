@@ -21,7 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-package com.hypertrack.demo;
+package com.hypertrack.hyperlog_demo;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -34,9 +34,9 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.android.volley.VolleyError;
 import com.hypertrack.hyperlog.HyperLog;
 import com.hypertrack.hyperlog.HyperLogCallback;
+import com.hypertrack.hyperlog.error.ErrorResponse;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -110,7 +110,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void pushLog(View view) {
-
         HyperLog.pushLogs(this, false, new HyperLogCallback() {
             @Override
             public void onSuccess(@NonNull String response) {
@@ -121,10 +120,9 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onError(@NonNull VolleyError errorResponse) {
+            public void onError(@NonNull ErrorResponse errorResponse) {
                 showToast("Log Push Error");
-                Log.d(TAG, "onError: ");
-                errorResponse.printStackTrace();
+                Log.d(TAG, "onError: " + errorResponse.getErrorMessage());
             }
         });
     }

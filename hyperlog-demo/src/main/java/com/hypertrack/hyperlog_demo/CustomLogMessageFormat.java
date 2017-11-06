@@ -24,7 +24,7 @@ SOFTWARE.
 /**
  * Created by Aman on 04/10/17.
  */
-package com.hypertrack.demo;
+package com.hypertrack.hyperlog_demo;
 
 import android.content.Context;
 

@@ -1,4 +1,4 @@
-package com.hypertrack.demo;
+package com.hypertrack.hyperlog;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.hypertrack.devicelogging", appContext.getPackageName());
+        assertEquals("com.hypertrack.devicelogger.test", appContext.getPackageName());
     }
 }

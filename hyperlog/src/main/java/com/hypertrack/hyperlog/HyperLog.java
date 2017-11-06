@@ -32,6 +32,7 @@ import android.util.Log;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.hypertrack.hyperlog.error.ErrorResponse;
 import com.hypertrack.hyperlog.utils.DateTimeUtility;
 import com.hypertrack.hyperlog.utils.Utils;
 import com.hypertrack.hyperlog.utils.VolleyUtils;
@@ -612,14 +613,15 @@ public class HyperLog {
                         if (isAllLogsPushed[0]) {
                             callback.onSuccess(response);
                         } else {
-                            callback.onError(new VolleyError("All logs hasn't been pushed"));
+                            ErrorResponse errorResponse = new ErrorResponse("All logs hasn't been pushed");
+                            callback.onError(errorResponse);
                         }
                     }
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-
+                    ErrorResponse errorResponse = new ErrorResponse(error);
                     isAllLogsPushed[0] = false;
                     temp[0]--;
                     error.printStackTrace();
@@ -627,7 +629,7 @@ public class HyperLog {
 
                     if (temp[0] == 0) {
                         if (callback != null) {
-                            callback.onError(error);
+                            callback.onError(errorResponse);
                         }
                     }
                 }

@@ -28,7 +28,6 @@ import android.os.Build;
 import android.provider.Settings;
 import android.util.Log;
 
-import com.hypertrack.devicelogger.BuildConfig;
 import com.hypertrack.hyperlog.utils.DateTimeUtility;
 
 

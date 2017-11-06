@@ -26,7 +26,7 @@ package com.hypertrack.hyperlog;
 
 import android.support.annotation.NonNull;
 
-import com.android.volley.VolleyError;
+import com.hypertrack.hyperlog.error.ErrorResponse;
 
 /**
  * Created by Aman Jain on 18/09/17.
@@ -45,5 +45,6 @@ public abstract class HyperLogCallback {
      *
      * @param errorResponse The request status.
      */
-    public abstract void onError(@NonNull VolleyError errorResponse);
+    public abstract void onError(@NonNull ErrorResponse errorResponse);
+
 }
