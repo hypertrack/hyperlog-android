@@ -118,8 +118,9 @@ public class HyperLog {
 
     /**
      * Call this method to define a custom log message format.
+     *
      * @param logFormat LogFormat to set custom log message format.
-     * */
+     */
     public static void setLogFormat(@NonNull LogFormat logFormat) {
         if (mLogFormat != null)
             mLogFormat = logFormat;
@@ -409,7 +410,7 @@ public class HyperLog {
      * A text file will create in the app folder containing all logs with the current date time as name of the file.
      *
      * @param mContext The current context.
-     * @param fileName   Name of the file.
+     * @param fileName Name of the file.
      * @return {@link File} object or {@code null} if there is not any logs in device.
      */
     public static File getDeviceLogsInFile(Context mContext, String fileName) {
