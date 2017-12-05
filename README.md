@@ -96,6 +96,10 @@ HyperLog.pushLogs(this, false, new HyperLogCallback() {
 <em>Request Bin Sample Response</em>
 </p>
 
+**Setup example endpoint using Django**
+
+1. Step 1
+
 **Note:** 
 * Push logs file to server in compressed form to reduce the data consumption and response time.
 ```
