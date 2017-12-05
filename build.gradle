@@ -4,9 +4,7 @@ buildscript {
     repositories {
         jcenter()
         maven { url 'https://maven.google.com' }
-        maven {
-            url 'https://dl.bintray.com/piyushgupta27/maven/'
-        }
+        //To add HyperLog library from maven
         google()
     }
     dependencies {
@@ -23,9 +21,6 @@ allprojects {
         jcenter()
         maven { url 'maven.google.com'; }
         google()
-        maven {
-            url 'https://dl.bintray.com/piyushgupta27/maven/'
-        }
     }
 }
 

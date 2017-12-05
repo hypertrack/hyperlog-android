@@ -25,6 +25,6 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.hypertrack:hyperlog:0.0.5'
+    compile 'com.hypertrack:hyperlog:0.0.3'
     testCompile 'junit:junit:4.12'
 }
