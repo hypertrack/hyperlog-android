@@ -56,17 +56,17 @@ public class CustomGson {
         private final DateFormat mDateFormat4;
 
         private DateTypeAdapter() {
-            mDateFormat1 = new SimpleDateFormat(DateTimeUtility.HT_DATETIME_FORMAT_1, Locale.US);
-            mDateFormat1.setTimeZone(TimeZone.getTimeZone(DateTimeUtility.HT_TIMEZONE_UTC));
+            mDateFormat1 = new SimpleDateFormat(HLDateTimeUtility.HT_DATETIME_FORMAT_1, Locale.US);
+            mDateFormat1.setTimeZone(TimeZone.getTimeZone(HLDateTimeUtility.HT_TIMEZONE_UTC));
 
-            mDateFormat2 = new SimpleDateFormat(DateTimeUtility.HT_DATETIME_FORMAT_2, Locale.US);
-            mDateFormat2.setTimeZone(TimeZone.getTimeZone(DateTimeUtility.HT_TIMEZONE_UTC));
+            mDateFormat2 = new SimpleDateFormat(HLDateTimeUtility.HT_DATETIME_FORMAT_2, Locale.US);
+            mDateFormat2.setTimeZone(TimeZone.getTimeZone(HLDateTimeUtility.HT_TIMEZONE_UTC));
 
-            mDateFormat3 = new SimpleDateFormat(DateTimeUtility.HT_DATETIME_FORMAT_3, Locale.US);
-            mDateFormat3.setTimeZone(TimeZone.getTimeZone(DateTimeUtility.HT_TIMEZONE_UTC));
+            mDateFormat3 = new SimpleDateFormat(HLDateTimeUtility.HT_DATETIME_FORMAT_3, Locale.US);
+            mDateFormat3.setTimeZone(TimeZone.getTimeZone(HLDateTimeUtility.HT_TIMEZONE_UTC));
 
-            mDateFormat4 = new SimpleDateFormat(DateTimeUtility.HT_DATETIME_FORMAT_4, Locale.US);
-            mDateFormat4.setTimeZone(TimeZone.getTimeZone(DateTimeUtility.HT_TIMEZONE_UTC));
+            mDateFormat4 = new SimpleDateFormat(HLDateTimeUtility.HT_DATETIME_FORMAT_4, Locale.US);
+            mDateFormat4.setTimeZone(TimeZone.getTimeZone(HLDateTimeUtility.HT_TIMEZONE_UTC));
         }
 
         @Override

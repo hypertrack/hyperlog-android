@@ -32,8 +32,8 @@ import android.util.Log;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.hypertrack.hyperlog.error.ErrorResponse;
-import com.hypertrack.hyperlog.utils.DateTimeUtility;
+import com.hypertrack.hyperlog.error.HLErrorResponse;
+import com.hypertrack.hyperlog.utils.HLDateTimeUtility;
 import com.hypertrack.hyperlog.utils.Utils;
 import com.hypertrack.hyperlog.utils.VolleyUtils;
 
@@ -435,7 +435,7 @@ public class HyperLog {
         File file = null;
 
         if (TextUtils.isEmpty(fileName)) {
-            fileName = DateTimeUtility.getCurrentTime() + ".txt";
+            fileName = HLDateTimeUtility.getCurrentTime() + ".txt";
             fileName = fileName.replaceAll("[^a-zA-Z0-9_\\\\-\\\\.]", "_");
         }
 
@@ -505,10 +505,10 @@ public class HyperLog {
      *
      * @param mContext The current context.
      * @param compress True, if logs will push to server in GZIP compressed format, false otherwise.
-     * @param callback Instance of {@link HyperLogCallback}.
+     * @param callback Instance of {@link HLCallback}.
      * @throws IllegalArgumentException if the API endpoint url is empty or null
      */
-    public static void pushLogs(Context mContext, boolean compress, HyperLogCallback callback) {
+    public static void pushLogs(Context mContext, boolean compress, HLCallback callback) {
         pushLogs(mContext, null, null, compress, callback);
     }
 
@@ -523,10 +523,10 @@ public class HyperLog {
      * @param mContext The current context.
      * @param fileName Name of the file that you want to receive on your server.
      * @param compress True, if logs will push to server in GZIP compressed format, false otherwise.
-     * @param callback Instance of {@link HyperLogCallback}.
+     * @param callback Instance of {@link HLCallback}.
      * @throws IllegalArgumentException if the API endpoint url is empty or null
      */
-    public static void pushLogs(Context mContext, String fileName, boolean compress, HyperLogCallback callback) {
+    public static void pushLogs(Context mContext, String fileName, boolean compress, HLCallback callback) {
         pushLogs(mContext, fileName, null, compress, callback);
     }
 
@@ -541,11 +541,11 @@ public class HyperLog {
      * @param mContext          The current context.
      * @param additionalHeaders Additional Headers to pass along with request.
      * @param compress          True, if logs will push to server in GZIP compressed format, false otherwise.
-     * @param callback          Instance of {@link HyperLogCallback}.
+     * @param callback          Instance of {@link HLCallback}.
      * @throws IllegalArgumentException if the API endpoint url is empty or null
      */
     public static void pushLogs(Context mContext, HashMap<String, String> additionalHeaders, boolean compress,
-                                HyperLogCallback callback) {
+                                HLCallback callback) {
         pushLogs(mContext, null, additionalHeaders, compress, callback);
     }
 
@@ -561,11 +561,11 @@ public class HyperLog {
      * @param mContext          The current context.
      * @param additionalHeaders Additional Headers to pass along with request.
      * @param compress          True, if logs will push to server in GZIP compressed format, false otherwise.
-     * @param callback          Instance of {@link HyperLogCallback}.
+     * @param callback          Instance of {@link HLCallback}.
      * @throws IllegalArgumentException if the API endpoint url is empty or null
      */
     public static void pushLogs(Context mContext, String fileName, HashMap<String, String> additionalHeaders,
-                                boolean compress, final HyperLogCallback callback) {
+                                boolean compress, final HLCallback callback) {
 
         if (!isInitialize())
             return;
@@ -598,13 +598,13 @@ public class HyperLog {
             byte[] bytes = Utils.getByteData(deviceLogs);
 
             if (TextUtils.isEmpty(fileName)) {
-                fileName = DateTimeUtility.getCurrentTime() + ".txt";
+                fileName = HLDateTimeUtility.getCurrentTime() + ".txt";
             }
 
-            HTTPMultiPartPostRequest httpMultiPartPostRequest = new HTTPMultiPartPostRequest<>(URL, bytes,
-                    fileName, additionalHeaders, mContext, String.class, compress, new Response.Listener<String>() {
+            HLHTTPMultiPartPostRequest hlHTTPMultiPartPostRequest = new HLHTTPMultiPartPostRequest<>(URL, bytes,
+                    fileName, additionalHeaders, mContext, Object.class, compress, new Response.Listener<Object>() {
                 @Override
-                public void onResponse(String response) {
+                public void onResponse(Object response) {
                     temp[0]--;
                     mDeviceLogList.clearDeviceLogs(deviceLogs);
                     HyperLog.i(TAG, "Log has been pushed");
@@ -613,15 +613,15 @@ public class HyperLog {
                         if (isAllLogsPushed[0]) {
                             callback.onSuccess(response);
                         } else {
-                            ErrorResponse errorResponse = new ErrorResponse("All logs hasn't been pushed");
-                            callback.onError(errorResponse);
+                            HLErrorResponse HLErrorResponse = new HLErrorResponse("All logs hasn't been pushed");
+                            callback.onError(HLErrorResponse);
                         }
                     }
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    ErrorResponse errorResponse = new ErrorResponse(error);
+                    HLErrorResponse HLErrorResponse = new HLErrorResponse(error);
                     isAllLogsPushed[0] = false;
                     temp[0]--;
                     error.printStackTrace();
@@ -629,13 +629,13 @@ public class HyperLog {
 
                     if (temp[0] == 0) {
                         if (callback != null) {
-                            callback.onError(errorResponse);
+                            callback.onError(HLErrorResponse);
                         }
                     }
                 }
             });
 
-            VolleyUtils.addToRequestQueue(mContext, httpMultiPartPostRequest, TAG);
+            VolleyUtils.addToRequestQueue(mContext, hlHTTPMultiPartPostRequest, TAG);
             logsBatchCount--;
         }
     }

@@ -38,8 +38,8 @@ import java.util.TimeZone;
  * Created by Aman on 04/10/17.
  */
 
-public class DateTimeUtility {
-    private static final String TAG = DateTimeUtility.class.getSimpleName();
+public class HLDateTimeUtility {
+    private static final String TAG = HLDateTimeUtility.class.getSimpleName();
     public static final String HT_DATETIME_FORMAT_1 = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
     public static final String HT_DATETIME_FORMAT_2 = "yyyy-MM-dd'T'HH:mm:ss'Z'";
     public static final String HT_DATETIME_FORMAT_3 = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSZZZ";

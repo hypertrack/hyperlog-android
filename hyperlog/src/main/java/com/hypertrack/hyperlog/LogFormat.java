@@ -28,7 +28,7 @@ import android.os.Build;
 import android.provider.Settings;
 import android.util.Log;
 
-import com.hypertrack.hyperlog.utils.DateTimeUtility;
+import com.hypertrack.hyperlog.utils.HLDateTimeUtility;
 
 
 /**
@@ -58,7 +58,7 @@ public class LogFormat {
      * @return Formatted Log Message that will store in database.
      */
     String formatLogMessage(int logLevel, String message) {
-        String timeStamp = DateTimeUtility.getCurrentTime();
+        String timeStamp = HLDateTimeUtility.getCurrentTime();
         String senderName = BuildConfig.VERSION_NAME;
         String osVersion = "Android-" + Build.VERSION.RELEASE;
         String logLevelName = getLogLevelName(logLevel);

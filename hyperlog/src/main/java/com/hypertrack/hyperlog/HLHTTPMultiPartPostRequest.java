@@ -41,7 +41,7 @@ import com.android.volley.toolbox.HttpHeaderParser;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.hypertrack.hyperlog.utils.CustomGson;
-import com.hypertrack.hyperlog.utils.DateTimeUtility;
+import com.hypertrack.hyperlog.utils.HLDateTimeUtility;
 import com.hypertrack.hyperlog.utils.Utils;
 
 import java.io.ByteArrayInputStream;
@@ -55,9 +55,9 @@ import java.util.Map;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-class HTTPMultiPartPostRequest<T> extends Request<T> {
+class HLHTTPMultiPartPostRequest<T> extends Request<T> {
 
-    private static final String TAG = HTTPMultiPartPostRequest.class.getSimpleName();
+    private static final String TAG = HLHTTPMultiPartPostRequest.class.getSimpleName();
     private final Gson mGson;
     private final Class<T> mResponseType;
     private final WeakReference<Response.Listener<T>> mListener;
@@ -74,9 +74,9 @@ class HTTPMultiPartPostRequest<T> extends Request<T> {
 
     private boolean mGzipEnabled = false;
 
-    HTTPMultiPartPostRequest(String url, byte[] multiPartRequestBody, String filename, HashMap<String, String> additionalHeaders,
-                             Context context, Class<T> responseType, boolean compress,
-                             Response.Listener<T> listener, Response.ErrorListener errorListener) {
+    HLHTTPMultiPartPostRequest(String url, byte[] multiPartRequestBody, String filename, HashMap<String, String> additionalHeaders,
+                               Context context, Class<T> responseType, boolean compress,
+                               Response.Listener<T> listener, Response.ErrorListener errorListener) {
 
         super(Method.POST, url, errorListener);
         this.context = context;
@@ -166,7 +166,7 @@ class HTTPMultiPartPostRequest<T> extends Request<T> {
 
         Map<String, String> params = new HashMap<>();
         params.put("User-Agent", context.getPackageName() + " (Android " + Build.VERSION.RELEASE + ")");
-        params.put("Device-Time", DateTimeUtility.getCurrentTime());
+        params.put("Device-Time", HLDateTimeUtility.getCurrentTime());
         params.put("Device-ID", Utils.getDeviceId(context));
         params.put("App-ID", packageName);
         //Header for file upload

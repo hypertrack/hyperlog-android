@@ -30,7 +30,7 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 
-import com.hypertrack.hyperlog.utils.DateTimeUtility;
+import com.hypertrack.hyperlog.utils.HLDateTimeUtility;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -236,7 +236,7 @@ class DeviceLogTable {
             //Set the calendar time to older time.
             calendar.add(Calendar.SECOND, -expiryTimeInSeconds);
 
-            String date = DateTimeUtility.getFormattedTime(calendar.getTime());
+            String date = HLDateTimeUtility.getFormattedTime(calendar.getTime());
 
             db.delete(TABLE_NAME, COLUMN_DEVICE_LOG + "<?", new String[]{date});
 

@@ -4,7 +4,7 @@ package com.hypertrack.hyperlog.error;
  * Created by piyush on 27/02/17.
  */
 
-public class ErrorCode {
+public class HLErrorCode {
 
     public enum Type {
         NETWORK_DISABLED,
