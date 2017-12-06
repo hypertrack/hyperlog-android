@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion '25.0.3'
+    buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "com.hypertrack.hyperlog_demo"
         minSdkVersion 14
@@ -25,6 +25,6 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.hypertrack:hyperlog:0.0.5'
+    compile 'com.hypertrack:hyperlog:0.0.6'
     testCompile 'junit:junit:4.12'
 }
