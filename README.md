@@ -31,7 +31,7 @@ The library is available on [`mavenCentral()`](https://dl.bintray.com/piyushgupt
 ```
 dependencies {
     ...
-    compile 'com.hypertrack:hyperlog:0.0.5'
+    compile 'com.hypertrack:hyperlog:0.0.6'
     ...
 }
 ```
@@ -72,7 +72,7 @@ HyperLog.pushLogs(this, false, new HyperLogCallback() {
             }
 
             @Override
-            public void onError(@NonNull VolleyError errorResponse) {
+            public void onError(@NonNull VolleyError HLErrorResponse) {
 
             }
 });
