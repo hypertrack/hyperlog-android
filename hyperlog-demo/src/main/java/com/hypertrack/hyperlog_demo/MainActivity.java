@@ -35,12 +35,14 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.hypertrack.hyperlog.HyperLog;
-import com.hypertrack.hyperlog.HyperLogCallback;
-import com.hypertrack.hyperlog.error.ErrorResponse;
+import com.hypertrack.hyperlog.HLCallback;
+import com.hypertrack.hyperlog.error.HLErrorResponse;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * Created by Aman on 04/10/17.
@@ -110,9 +112,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void pushLog(View view) {
-        HyperLog.pushLogs(this, false, new HyperLogCallback() {
+        //Extra header to post request
+        HashMap<String, String> params = new HashMap<>();
+        params.put("timezone", TimeZone.getDefault().getID());
+
+        HyperLog.pushLogs(this, params, true, new HLCallback() {
             @Override
-            public void onSuccess(@NonNull String response) {
+            public void onSuccess(@NonNull Object response) {
                 showToast("Log Pushed");
                 Log.d(TAG, "onSuccess: " + response);
                 logsList.clear();
@@ -120,9 +126,9 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onError(@NonNull ErrorResponse errorResponse) {
+            public void onError(@NonNull HLErrorResponse HLErrorResponse) {
                 showToast("Log Push Error");
-                Log.d(TAG, "onError: " + errorResponse.getErrorMessage());
+                Log.e(TAG, "onError: " + HLErrorResponse.getErrorMessage());
             }
         });
     }
