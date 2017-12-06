@@ -5,6 +5,16 @@
 
 * [Overview](#overview)
 * [Log format](#log-format)
+* [Download](#download)
+* [Initialize](#initialize)
+* [Usage](#usage)
+* [Get Logs in a File](#get-logs-in-a-file)
+* [Push Logs Files to Remote Server](#push-logs-files-to-remote-server)
+* [Custom Log Message Format](#custom-log-message-format)
+* [Additional Methods](#additional-methods)
+* [Contribute](#contribute)
+* [About HyperTrack](#about-hyperTrack)
+* [License](#license)
 
 ## Overview
 A utility logger library for Android on top of standard Android `Log` class for debugging purpose. This is a simple library that will allow Android apps or library to store `log` into `database` so that developer can pull the logs from the database into `File` or push the logs to your `remote server` for `debugging` purpose. Want to know more on this and wondering why you should prefer using this library over doing it yourself. Check out the blog post.
