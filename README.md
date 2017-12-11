@@ -35,7 +35,7 @@ timeStamp + " | " + appVersion + " : " + osVersion + " | " + deviceUUID + " | ["
 ## Download
 Download the latest version or grab via Gradle.
 
-The library is available on [`mavenCentral()`](https://dl.bintray.com/piyushgupta27/maven/com/hypertrack/hyperlog/) and `jcenter()`. In your module's `build.gradle`, add the following code snippet and run the `gradle-sync`.
+The library is available on [`mavenCentral()`](https://dl.bintray.com/piyushgupta27/maven/com/hypertrack/hyperlog/) and [`jcenter()`](http://jcenter.bintray.com/com/hypertrack/hyperlog/). In your module's `build.gradle`, add the following code snippet and run the `gradle-sync`.
 
 
 ```
@@ -75,9 +75,9 @@ HyperLog.setURL("API URL");
 
 2. Push Logs file to the given endpoint.
 ```
-HyperLog.pushLogs(this, false, new HyperLogCallback() {
+HyperLog.pushLogs(this, false, new HLCallback() {
             @Override
-            public void onSuccess(@NonNull String response) {
+            public void onSuccess(@NonNull Object response) {
 
             }
 
@@ -190,7 +190,7 @@ HyperLog.logCount();
 ```
 HashMap<String, String> additionalHeaders = new HashMap<>();
 additionalHeaders.put("Authorization","Token");
-HyperLog.pushLogs(this, additionalHeaders, false, hyperLogCallback);
+HyperLog.pushLogs(this, additionalHeaders, false, HLCallback);
 ```
 
 * By default, seven days older logs will get delete automatically from the database. You can change the expiry period of logs by defining `expiryTimeInSeconds`.
