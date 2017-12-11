@@ -15,7 +15,7 @@
 * [Custom Log Message Format](#custom-log-message-format)
 * [Additional Methods](#additional-methods)
 * [Contribute](#contribute)
-* [About HyperTrack](#about-hyperTrack)
+* [About HyperTrack](#about-hypertrack)
 * [License](#license)
 
 ## Overview
