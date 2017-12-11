@@ -107,6 +107,7 @@ HyperLog.pushLogs(this, false, new HyperLogCallback() {
 </p>
 
 **Setup example endpoint inside Django**
+
 The example code below will set you up with a view that can handle uploaded log files, decompress gzip, and print the contents of the file.
 
 ```python
