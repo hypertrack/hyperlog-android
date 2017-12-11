@@ -106,9 +106,78 @@ HyperLog.pushLogs(this, false, new HyperLogCallback() {
 <em>Request Bin Sample Response</em>
 </p>
 
-**Setup example endpoint using Django**
+**Setup example endpoint inside Django**
+The example code below will set you up with a view that can handle uploaded log files, decompress gzip, and print the contents of the file.
 
-1. Step 1
+```python
+from rest_framework import views
+
+class SDKLogFileAPIView(views.APIView):
+    '''
+    SDK Log endpoint for file uploads
+
+    Example curl call:
+    curl -i -X POST
+            -H "Content-Type: multipart/form-data"
+            -H "Authorization: token pk_e6c9cf663714fb4b96c12d265df554349e0db79b"
+            -H "Content-Disposition: attachment; filename=upload.txt"
+            -F "data=@/Users/Arjun/Desktop/filename.txt"
+            localhost:8000/api/v1/logs/
+    '''
+    parser_classes = (
+        parsers.FileUploadParser,
+    )
+
+    def post(self, request):
+        '''
+        Prints logs to stdout (accepts file)
+        '''
+        if request.FILES:
+            device_id = self.request.META.get('HTTP_DEVICE_ID', 'None')
+            user_agent = self.request.META.get('HTTP_USER_AGENT', 'None')
+            expect_header = self.request.META.get('HTTP_EXPECT', 'None')
+            file_obj = request.FILES['file']
+            logger.info('Received log file of size %s bytes from device id: %s and user agent: %s and expect header: %s' %
+                        (str(file_obj.size), device_id, user_agent, expect_header))
+            self.decompress_file(file_obj)
+
+        return Response({})
+
+    def decompress_file(self, f):
+        '''
+        Decompress the gzip file and then print it to stdout
+        so that logstash can pick it up. In case Content-Encoding
+        is not gzip, then the normal method picks up the file.
+        '''
+        if not self.request.META.get('HTTP_CONTENT_ENCODING') == 'gzip':
+            return self.handle_uploaded_file(f)
+
+        result = StringIO.StringIO()
+
+        for chunk in f.chunks():
+            result.write(chunk)
+
+        stringified_value = result.getvalue()
+        result.close()
+        decompressor = zlib.decompressobj(16 + zlib.MAX_WBITS)
+        decompressed = decompressor.decompress(stringified_value)
+
+        for line in decompressed.split('\n'):
+            print line
+
+    def handle_uploaded_file(self, f):
+        '''
+        Handle django file to print, so that logstash
+        can pick it up.
+        '''
+        for chunk in f.chunks():
+            lines = chunk.split('\n')
+
+            for line in lines:
+                print line
+```
+
+
 
 **Note:** 
 * Push logs file to server in compressed form to reduce the data consumption and response time.
