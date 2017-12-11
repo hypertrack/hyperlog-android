@@ -10,6 +10,8 @@
 * [Usage](#usage)
 * [Get Logs in a File](#get-logs-in-a-file)
 * [Push Logs Files to Remote Server](#push-logs-files-to-remote-server)
+    * [Sample Testing Endpoint using RequestBin](#follow-steps-to-setup-testing-endpoint-at-requestbin)
+    * [Example Testing Endpoint using Django](#setup-example-endpoint-inside-django)
 * [Custom Log Message Format](#custom-log-message-format)
 * [Additional Methods](#additional-methods)
 * [Contribute](#contribute)
@@ -88,7 +90,7 @@ HyperLog.pushLogs(this, false, new HLCallback() {
 });
 ```
 
-**Follow steps to setup testing endpoint at [`RequestBin`](https://requestb.in/)**
+### **Follow steps to setup testing endpoint at [`RequestBin`](https://requestb.in/)**
 
 1. Visit the [`RequestBin`](https://requestb.in/) site and create a `RequestBin`.
 2. Once you have the bin created, copy the URL and set it to the `HyperLog.setURL`.
@@ -106,7 +108,7 @@ HyperLog.pushLogs(this, false, new HLCallback() {
 <em>Request Bin Sample Response</em>
 </p>
 
-**Setup example endpoint inside Django**
+### **Setup example endpoint inside Django**
 
 The example code below will set you up with a view that can handle uploaded log files, decompress gzip, and print the contents of the file.
 
