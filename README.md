@@ -11,7 +11,7 @@
 * [Get Logs in a File](#get-logs-in-a-file)
 * [Push Logs Files to Remote Server](#push-logs-files-to-remote-server)
     * [Sample Testing Endpoint using RequestBin](#follow-steps-to-setup-testing-endpoint-at-requestbin)
-    * [Example Testing Endpoint using Django](#setup-example-endpoint-inside-django)
+    * [Example Testing Endpoint inside Django](#setup-example-endpoint-inside-django)
 * [Custom Log Message Format](#custom-log-message-format)
 * [Additional Methods](#additional-methods)
 * [Contribute](#contribute)
