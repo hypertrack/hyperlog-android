@@ -132,7 +132,6 @@ public class HyperLog {
             HyperLog.e(TAG, "HyperLog isn't initialized.");
             return false;
         }
-
         return true;
     }
 
@@ -147,6 +146,21 @@ public class HyperLog {
             throw new IllegalArgumentException("API URL cannot be null or empty");
         URL = url;
     }
+
+    /**
+     * Call this method to get a end point URL where logs need to be pushed.
+     * */
+    public static String getURL() {
+        return URL;
+    }
+
+    /**
+     * Call this method to get a expiry time of logs. Expiry Time is in seconds.
+     */
+    public static long getExpiryTime(){
+        return EXPIRY_TIME;
+    }
+
 
     /**
      * Sets the level of logging to display, where each level includes all those below it. The default
