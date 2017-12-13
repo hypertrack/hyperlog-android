@@ -43,7 +43,7 @@ The library is available on [`mavenCentral()`](https://dl.bintray.com/piyushgupt
 ```
 dependencies {
     ...
-    compile 'com.hypertrack:hyperlog:0.0.6'
+    compile 'com.hypertrack:hyperlog:0.0.7'
     ...
 }
 ```

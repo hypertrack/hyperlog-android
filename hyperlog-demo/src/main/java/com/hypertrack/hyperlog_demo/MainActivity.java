@@ -34,8 +34,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.hypertrack.hyperlog.HyperLog;
 import com.hypertrack.hyperlog.HLCallback;
+import com.hypertrack.hyperlog.HyperLog;
 import com.hypertrack.hyperlog.error.HLErrorResponse;
 
 import java.io.File;
@@ -51,7 +51,7 @@ import java.util.TimeZone;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    EditText editText;
+    EditText editText, endPointUrl;
     ListView listView;
     List<String> logsList = new ArrayList<>();
     ArrayAdapter listAdapter;
@@ -68,10 +68,20 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         //Set Custom Log Message Format.
         HyperLog.setLogFormat(new CustomLogMessageFormat(this));
+        endPointUrl = (EditText) findViewById(R.id.end_point_url);
         editText = (EditText) findViewById(R.id.logText);
         listView = (ListView) findViewById(R.id.listView);
         listAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, logsList);
         listView.setAdapter(listAdapter);
+    }
+
+    public void setEndPoint(View view) {
+        String url = endPointUrl.getText().toString();
+        if (TextUtils.isEmpty(url)) {
+            Toast.makeText(this, "Url can't be empty.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        HyperLog.setURL(url);
     }
 
     public void showLogs(View view) {
@@ -112,6 +122,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void pushLog(View view) {
+
+        if (TextUtils.isEmpty(HyperLog.getURL())) {
+            Toast.makeText(this, "Set EndPoint URL First", Toast.LENGTH_SHORT).show();
+            endPointUrl.requestFocus();
+            return;
+        }
         //Extra header to post request
         HashMap<String, String> params = new HashMap<>();
         params.put("timezone", TimeZone.getDefault().getID());
@@ -139,4 +155,6 @@ public class MainActivity extends AppCompatActivity {
         toast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
         toast.show();
     }
+
+
 }

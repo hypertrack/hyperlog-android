@@ -38,6 +38,6 @@ public class MyApplication extends Application {
         super.onCreate();
         HyperLog.initialize(this,new CustomLogMessageFormat(this));
         HyperLog.setLogLevel(Log.VERBOSE);
-        HyperLog.setURL("https://requestb.in/1ggx8zp1");
+        HyperLog.setURL("<Set URL>");
     }
 }
