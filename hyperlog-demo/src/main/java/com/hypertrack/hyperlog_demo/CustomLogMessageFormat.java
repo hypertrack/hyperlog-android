@@ -37,9 +37,9 @@ class CustomLogMessageFormat extends LogFormat {
     }
 
     @Override
-    public String getFormattedLogMessage(String logLevelName, String message, String timeStamp,
+    public String getFormattedLogMessage(String logLevelName, String tag, String message, String timeStamp,
                                          String senderName, String osVersion, String deviceUUID) {
-        String formattedMessage = timeStamp + " : " + logLevelName + " : " + deviceUUID + " : " + message;
+        String formattedMessage = timeStamp + " : " + logLevelName+"/"+tag + " : " + deviceUUID + " : " + message;
         return formattedMessage;
     }
 }

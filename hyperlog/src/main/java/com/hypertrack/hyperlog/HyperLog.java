@@ -48,6 +48,8 @@ import java.util.List;
 public class HyperLog {
 
     private static final String TAG = "HyperLog";
+    public static final String TAG_ASSERT = "ASSERT";
+    public static final String TAG_HYPERLOG = "HYPERLOG";
     private static int logLevel = Log.WARN;
     private static DeviceLogList mDeviceLogList;
     private static String URL;
@@ -211,7 +213,7 @@ public class HyperLog {
             Log.i(tag, message + '\n' + Log.getStackTraceString(tr));
         }
 
-        r(mLogFormat.formatLogMessage(Log.INFO, message));
+        r(mLogFormat.formatLogMessage(Log.INFO,tag, message));
     }
 
     /**
@@ -226,7 +228,7 @@ public class HyperLog {
             Log.w(tag, message + '\n' + Log.getStackTraceString(tr));
         }
 
-        r(mLogFormat.formatLogMessage(Log.WARN, message));
+        r(mLogFormat.formatLogMessage(Log.WARN, tag, message));
     }
 
     public static void w(String tag, String message) {
@@ -238,7 +240,7 @@ public class HyperLog {
             Log.e(tag, message + '\n' + Log.getStackTraceString(tr));
         }
 
-        r(mLogFormat.formatLogMessage(Log.ERROR, message));
+        r(mLogFormat.formatLogMessage(Log.ERROR, tag, message));
     }
 
     public static void e(String tag, String message) {
@@ -252,7 +254,7 @@ public class HyperLog {
             Log.e(tag, "**********************************************");
         }
 
-        r(mLogFormat.formatLogMessage(Log.ERROR, "EXCEPTION: " + getMethodName() + ", " + message));
+        r(mLogFormat.formatLogMessage(Log.ERROR, tag,"EXCEPTION: " + getMethodName() + ", " + message));
     }
 
     public static void exception(String tag, String message) {
@@ -267,7 +269,7 @@ public class HyperLog {
     }
 
     public static void a(String message) {
-        r(mLogFormat.formatLogMessage(Log.ASSERT, message));
+        r(mLogFormat.formatLogMessage(Log.ASSERT, TAG_ASSERT,message));
     }
 
     private static String getMethodName() {
@@ -606,7 +608,7 @@ public class HyperLog {
         while (logsBatchCount != 0) {
 
             final List<DeviceLogModel> deviceLogs = getDeviceLogs(false, logsBatchCount);
-            deviceLogs.add(new DeviceLogModel(mLogFormat.formatLogMessage(Log.INFO, "Log Counts: " +
+            deviceLogs.add(new DeviceLogModel(mLogFormat.formatLogMessage(Log.INFO, TAG_HYPERLOG,"Log Counts: " +
                     deviceLogs.size() + " | File Size: " + deviceLogs.toString().length() + " bytes.")));
             //Get string data into byte format.
             byte[] bytes = Utils.getByteData(deviceLogs);
@@ -662,4 +664,5 @@ public class HyperLog {
             return;
         mDeviceLogList.clearSavedDeviceLogs();
     }
+
 }
