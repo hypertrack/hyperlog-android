@@ -518,7 +518,7 @@ public class HyperLog {
      *
      * @return The number of device logs.
      */
-    public static long getLogsCount() {
+    public static long getDeviceLogsCount() {
         if (!isInitialize())
             return 0;
 
@@ -619,8 +619,9 @@ public class HyperLog {
             return;
 
         if (TextUtils.isEmpty(URL)) {
-            throw new IllegalArgumentException("API endpoint URL is missing. Set URL using " +
+            HyperLog.e(TAG,"API endpoint URL is missing. Set URL using " +
                     "HyperLog.setURL method");
+            return;
         }
 
         VolleyUtils.cancelPendingRequests(mContext, TAG);
