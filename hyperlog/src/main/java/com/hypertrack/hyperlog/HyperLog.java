@@ -98,14 +98,16 @@ public class HyperLog {
 
     /**
      * Call this method to initialize HyperLog.
-     * By default, seven days older logs will get expire automatically. You can change the expiry period of logs by defining expiryTimeInSeconds.
+     * By default, seven days older logs will get expire automatically. You can change the expiry
+     * period of logs by defining expiryTimeInSeconds.
      *
      * @param context             The current context.
      * @param expiryTimeInSeconds Expiry time for logs in seconds.
      * @param logFormat           {@link LogFormat} to set custom log message format.
      * @see #initialize(Context)
      */
-    public static void initialize(@NonNull Context context, int expiryTimeInSeconds, @NonNull LogFormat logFormat) {
+    public static void initialize(@NonNull Context context, int expiryTimeInSeconds,
+                                  @NonNull LogFormat logFormat) {
 
         if (context == null)
             Log.e(TAG, "HyperLog isn't initialized: Context couldn't be null");
@@ -134,8 +136,10 @@ public class HyperLog {
      * @param logFormat LogFormat to set custom log message format.
      */
     public static void setLogFormat(@NonNull LogFormat logFormat) {
-        if (mLogFormat != null)
+        if (mLogFormat != null) {
             mLogFormat = logFormat;
+            Utils.saveLogFormat(context, logFormat);
+        }
     }
 
     private static boolean isInitialize() {
@@ -172,10 +176,9 @@ public class HyperLog {
         return EXPIRY_TIME;
     }
 
-
     /**
-     * Sets the level of logging to display, where each level includes all those below it. The default
-     * level is LOG_LEVEL_NONE. Please ensure this is set to Log#ERROR
+     * Sets the level of logging to display, where each level includes all those below it.
+     * The default level is LOG_LEVEL_NONE. Please ensure this is set to Log#ERROR
      * or LOG_LEVEL_NONE before deploying your app to ensure no sensitive information is
      * logged. The levels are:
      * <ul>
@@ -208,7 +211,6 @@ public class HyperLog {
         if (Log.DEBUG >= logLevel) {
             Log.d(tag, message + '\n' + Log.getStackTraceString(tr));
         }
-        isInitialize();
         r(getFormattedLog(logLevel, tag, message));
 
     }
@@ -259,10 +261,12 @@ public class HyperLog {
     public static void exception(String tag, String message, Throwable tr) {
         if (Log.ERROR >= logLevel) {
             Log.e(tag, "**********************************************");
-            Log.e(tag, "EXCEPTION: " + getMethodName() + ", " + message + '\n' + Log.getStackTraceString(tr));
+            Log.e(tag, "EXCEPTION: " + getMethodName() + ", " + message + '\n' +
+                    Log.getStackTraceString(tr));
             Log.e(tag, "**********************************************");
         }
-        r(getFormattedLog(Log.ERROR, tag, "EXCEPTION: " + getMethodName() + ", " + message));
+        r(getFormattedLog(Log.ERROR, tag, "EXCEPTION: " + getMethodName() + ", "
+                + message));
     }
 
     public static void exception(String tag, String message) {
@@ -339,7 +343,8 @@ public class HyperLog {
      * @param deleteLogs If true then logs will delete from the device.
      * @param batchNo    If there are more than one batch of device log then specify the batch number.
      *                   Batch number should be greater than or equal to 1.
-     * @return List of {@link DeviceLogModel} or empty list if batch number is greater than the {@link HyperLog#getDeviceLogBatchCount()}
+     * @return List of {@link DeviceLogModel} or empty list if batch number is greater than the
+     * {@link HyperLog#getDeviceLogBatchCount()}
      */
     public static List<DeviceLogModel> getDeviceLogs(boolean deleteLogs, int batchNo) {
         List<DeviceLogModel> deviceLogs = new ArrayList<>();
@@ -378,8 +383,10 @@ public class HyperLog {
      * Call this method to get a list of stored Device Logs
      *
      * @param deleteLogs If true then logs will delete from the device.
-     * @param batchNo    If there are more than one batch of device log then specify the batch number. Batch number should be greater than or equal to 1.
-     * @return List of {@link String} or if the given batchNo is greater than the {@link HyperLog#getDeviceLogBatchCount()} then returns empty list;
+     * @param batchNo    If there are more than one batch of device log then specify the batch number.
+     *                   Batch number should be greater than or equal to 1.
+     * @return List of {@link String} or if the given batchNo is greater than the
+     * {@link HyperLog#getDeviceLogBatchCount()} then returns empty list;
      */
     public static List<String> getDeviceLogsAsStringList(boolean deleteLogs, int batchNo) {
         List<String> logsList = new ArrayList<>();
@@ -415,7 +422,8 @@ public class HyperLog {
 
     /**
      * Call this method to get a stored Device Logs as a File object.
-     * A text file will create in the app folder containing all logs with the current date time as name of the file.
+     * A text file will create in the app folder containing all logs with the current date time as
+     * name of the file.
      *
      * @param mContext The current context.
      * @return {@link File} object or {@code null} if there is not any logs in device.
@@ -426,7 +434,8 @@ public class HyperLog {
 
     /**
      * Call this method to get a stored Device Logs as a File object.
-     * A text file will create in the app folder containing all logs with the current date time as name of the file.
+     * A text file will create in the app folder containing all logs with the current date time as
+     * name of the file.
      *
      * @param mContext   The current context.
      * @param deleteLogs If true then logs will delete from the device.
@@ -438,7 +447,8 @@ public class HyperLog {
 
     /**
      * Call this method to get a stored Device Logs as a File object.
-     * A text file will create in the app folder containing all logs with the current date time as name of the file.
+     * A text file will create in the app folder containing all logs with the current date time as
+     * name of the file.
      *
      * @param mContext The current context.
      * @param fileName Name of the file.
@@ -476,11 +486,13 @@ public class HyperLog {
             List<DeviceLogModel> deviceLogList = getDeviceLogs(deleteLogs);
 
             if (deviceLogList != null && !deviceLogList.isEmpty()) {
-                file = Utils.writeStringsToFile(mContext, getDeviceLogsAsStringList(deviceLogList), fileName);
+                file = Utils.writeStringsToFile(mContext, getDeviceLogsAsStringList(deviceLogList),
+                        fileName);
                 if (file != null) {
                     if (deleteLogs)
                         mDeviceLogList.clearDeviceLogs(deviceLogList);
-                    HyperLog.i(TAG, "Log File has been created at " + file.getAbsolutePath());
+                    HyperLog.i(TAG, "Log File has been created at " +
+                            file.getAbsolutePath());
                 }
             }
             logsBatchCount--;
@@ -506,7 +518,7 @@ public class HyperLog {
      *
      * @return The number of device logs.
      */
-    public static long logCount() {
+    public static long getLogsCount() {
         if (!isInitialize())
             return 0;
 
@@ -514,7 +526,8 @@ public class HyperLog {
     }
 
     /**
-     * Call this method to get number of device logs batches. Each batch contains the 5000 device logs.
+     * Call this method to get number of device logs batches. Each batch contains the 5000 device
+     * logs.
      *
      * @return The number of device logs batches.
      */
@@ -543,7 +556,8 @@ public class HyperLog {
     }
 
     /**
-     * Call this method to push logs from device to the server with custom filename as a text file or gzip compressed file.
+     * Call this method to push logs from device to the server with custom filename as a text file
+     * or gzip compressed file.
      * <p>
      * Logs will get delete from the device once it successfully push to the server.
      * <p>
@@ -556,7 +570,8 @@ public class HyperLog {
      * @param callback Instance of {@link HLCallback}.
      * @throws IllegalArgumentException if the API endpoint url is empty or null
      */
-    public static void pushLogs(Context mContext, String fileName, boolean compress, HLCallback callback) {
+    public static void pushLogs(Context mContext, String fileName, boolean compress,
+                                HLCallback callback) {
         pushLogs(mContext, fileName, null, compress, callback);
     }
 
@@ -570,38 +585,42 @@ public class HyperLog {
      *
      * @param mContext          The current context.
      * @param additionalHeaders Additional Headers to pass along with request.
-     * @param compress          True, if logs will push to server in GZIP compressed format, false otherwise.
+     * @param compress          True, if logs will push to server in GZIP compressed format,
+     *                          false otherwise.
      * @param callback          Instance of {@link HLCallback}.
      * @throws IllegalArgumentException if the API endpoint url is empty or null
      */
-    public static void pushLogs(Context mContext, HashMap<String, String> additionalHeaders, boolean compress,
-                                HLCallback callback) {
+    public static void pushLogs(Context mContext, HashMap<String, String> additionalHeaders,
+                                boolean compress, HLCallback callback) {
         pushLogs(mContext, null, additionalHeaders, compress, callback);
     }
 
     /**
-     * Call this method to push logs from device to the server with custom filename as a text file or gzip compressed file.
+     * Call this method to push logs from device to the server with custom filename as a text file
+     * or gzip compressed file.
      * <p>
      * Logs will get delete from the device once it successfully push to the server.
      * <p>
-     * If device log count is greater than {@value DeviceLogTable#DEVICE_LOG_REQUEST_QUERY_LIMIT} then
-     * log will push to the server in batches.
+     * If device log count is greater than {@value DeviceLogTable#DEVICE_LOG_REQUEST_QUERY_LIMIT}
+     * then log will push to the server in batches.
      *
      * @param fileName          Name of the file that you want to receive on your server.
      * @param mContext          The current context.
      * @param additionalHeaders Additional Headers to pass along with request.
-     * @param compress          True, if logs will push to server in GZIP compressed format, false otherwise.
+     * @param compress          True, if logs will push to server in GZIP compressed format,
+     *                          false otherwise.
      * @param callback          Instance of {@link HLCallback}.
      * @throws IllegalArgumentException if the API endpoint url is empty or null
      */
-    public static void pushLogs(Context mContext, String fileName, HashMap<String, String> additionalHeaders,
-                                boolean compress, final HLCallback callback) {
+    public static void pushLogs(Context mContext, String fileName, HashMap<String,
+            String> additionalHeaders, boolean compress, final HLCallback callback) {
 
         if (!isInitialize())
             return;
 
         if (TextUtils.isEmpty(URL)) {
-            throw new IllegalArgumentException("API endpoint URL is missing. Set URL using HyperLog.setURL method");
+            throw new IllegalArgumentException("API endpoint URL is missing. Set URL using " +
+                    "HyperLog.setURL method");
         }
 
         VolleyUtils.cancelPendingRequests(mContext, TAG);
@@ -622,8 +641,9 @@ public class HyperLog {
         while (logsBatchCount != 0) {
 
             final List<DeviceLogModel> deviceLogs = getDeviceLogs(false, logsBatchCount);
-            deviceLogs.add(new DeviceLogModel(getFormattedLog(Log.INFO, TAG_HYPERLOG, "Log Counts: " +
-                    deviceLogs.size() + " | File Size: " + deviceLogs.toString().length() + " bytes.")));
+            deviceLogs.add(new DeviceLogModel(getFormattedLog(Log.INFO, TAG_HYPERLOG,
+                    "Log Counts: " + deviceLogs.size() + " | File Size: " +
+                            deviceLogs.toString().length() + " bytes.")));
             //Get string data into byte format.
             byte[] bytes = Utils.getByteData(deviceLogs);
 
@@ -631,39 +651,42 @@ public class HyperLog {
                 fileName = HLDateTimeUtility.getCurrentTime() + ".txt";
             }
 
-            HLHTTPMultiPartPostRequest hlHTTPMultiPartPostRequest = new HLHTTPMultiPartPostRequest<>(URL, bytes,
-                    fileName, additionalHeaders, mContext, Object.class, compress, new Response.Listener<Object>() {
-                @Override
-                public void onResponse(Object response) {
-                    temp[0]--;
-                    mDeviceLogList.clearDeviceLogs(deviceLogs);
-                    HyperLog.i(TAG, "Log has been pushed");
+            HLHTTPMultiPartPostRequest hlHTTPMultiPartPostRequest =
+                    new HLHTTPMultiPartPostRequest<>(URL, bytes, fileName, additionalHeaders,
+                            mContext, Object.class, compress, new Response.Listener<Object>() {
+                        @Override
+                        public void onResponse(Object response) {
+                            temp[0]--;
+                            mDeviceLogList.clearDeviceLogs(deviceLogs);
+                            HyperLog.i(TAG, "Log has been pushed");
 
-                    if (callback != null && temp[0] == 0) {
-                        if (isAllLogsPushed[0]) {
-                            callback.onSuccess(response);
-                        } else {
-                            HLErrorResponse HLErrorResponse = new HLErrorResponse("All logs hasn't been pushed");
-                            callback.onError(HLErrorResponse);
+                            if (callback != null && temp[0] == 0) {
+                                if (isAllLogsPushed[0]) {
+                                    callback.onSuccess(response);
+                                } else {
+                                    HLErrorResponse HLErrorResponse = new HLErrorResponse(
+                                            "All logs hasn't been pushed");
+                                    callback.onError(HLErrorResponse);
+                                }
+                            }
                         }
-                    }
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    HLErrorResponse HLErrorResponse = new HLErrorResponse(error);
-                    isAllLogsPushed[0] = false;
-                    temp[0]--;
-                    error.printStackTrace();
-                    HyperLog.exception(TAG, "Error has occurred while pushing logs: ", error);
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            HLErrorResponse HLErrorResponse = new HLErrorResponse(error);
+                            isAllLogsPushed[0] = false;
+                            temp[0]--;
+                            error.printStackTrace();
+                            HyperLog.exception(TAG, "Error has occurred while pushing " +
+                                            "logs: ", error);
 
-                    if (temp[0] == 0) {
-                        if (callback != null) {
-                            callback.onError(HLErrorResponse);
+                            if (temp[0] == 0) {
+                                if (callback != null) {
+                                    callback.onError(HLErrorResponse);
+                                }
+                            }
                         }
-                    }
-                }
-            });
+                    });
 
             VolleyUtils.addToRequestQueue(mContext, hlHTTPMultiPartPostRequest, TAG);
             logsBatchCount--;
