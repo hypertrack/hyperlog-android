@@ -1,4 +1,3 @@
-
 /*
 The MIT License (MIT)
 
@@ -50,11 +49,14 @@ public class HyperLog {
     private static final String TAG = "HyperLog";
     public static final String TAG_ASSERT = "ASSERT";
     public static final String TAG_HYPERLOG = "HYPERLOG";
+
     private static int logLevel = Log.WARN;
+
     private static DeviceLogList mDeviceLogList;
     private static String URL;
     private static final int EXPIRY_TIME = 7 * 24 * 60 * 60;// 7 Days
     private static LogFormat mLogFormat;
+    private static Context context;
 
     /**
      * Call this method to initialize HyperLog.
@@ -101,20 +103,25 @@ public class HyperLog {
      * @see #initialize(Context)
      */
     public static void initialize(@NonNull Context context, int expiryTimeInSeconds, @NonNull LogFormat logFormat) {
+
+
         if (context == null)
-            throw new IllegalArgumentException("Context cannot be null.");
+            Log.e(TAG, "HyperLog isn't initialized: Context couldn't be null");
 
-        if (mDeviceLogList == null) {
-            synchronized (HyperLog.class) {
-                if (mDeviceLogList == null) {
-                    if (logFormat != null)
-                        mLogFormat = logFormat;
-                    else mLogFormat = new LogFormat(context);
-                    DeviceLogDataSource logDataSource = DeviceLogDatabaseHelper.getInstance(context);
-                    mDeviceLogList = new DeviceLogList(logDataSource);
-                    mDeviceLogList.clearOldLogs(expiryTimeInSeconds);
+        HyperLog.context = context.getApplicationContext();
 
-                }
+        synchronized (HyperLog.class) {
+            if (logFormat != null) {
+                mLogFormat = logFormat;
+                Utils.saveLogFormat(context, mLogFormat);
+            } else {
+                mLogFormat = Utils.getLogFormat(context);
+            }
+
+            if (mDeviceLogList == null) {
+                DeviceLogDataSource logDataSource = DeviceLogDatabaseHelper.getInstance(context);
+                mDeviceLogList = new DeviceLogList(logDataSource);
+                mDeviceLogList.clearOldLogs(expiryTimeInSeconds);
             }
         }
     }
@@ -130,8 +137,8 @@ public class HyperLog {
     }
 
     private static boolean isInitialize() {
-        if (mDeviceLogList == null) {
-            HyperLog.e(TAG, "HyperLog isn't initialized.");
+        if (mDeviceLogList == null || mLogFormat == null) {
+            initialize(context, null);
             return false;
         }
         return true;
@@ -188,24 +195,24 @@ public class HyperLog {
         if (Log.VERBOSE >= logLevel) {
             Log.v(tag, message + '\n' + Log.getStackTraceString(tr));
         }
+        r(getFormattedLog(logLevel, tag, message));
     }
 
     public static void v(String tag, String message) {
-        if (Log.VERBOSE >= logLevel) {
-            Log.v(tag, message);
-        }
+        v(tag, message, null);
     }
 
     public static void d(String tag, String message, Throwable tr) {
         if (Log.DEBUG >= logLevel) {
             Log.d(tag, message + '\n' + Log.getStackTraceString(tr));
         }
+        isInitialize();
+        r(getFormattedLog(logLevel, tag, message));
+
     }
 
     public static void d(String tag, String message) {
-        if (Log.DEBUG >= logLevel) {
-            Log.d(tag, message);
-        }
+        d(tag, message, null);
     }
 
     public static void i(String tag, String message, Throwable tr) {
@@ -213,7 +220,7 @@ public class HyperLog {
             Log.i(tag, message + '\n' + Log.getStackTraceString(tr));
         }
 
-        r(mLogFormat.formatLogMessage(Log.INFO, tag, message));
+        r(getFormattedLog(Log.INFO, tag, message));
     }
 
     /**
@@ -228,7 +235,7 @@ public class HyperLog {
             Log.w(tag, message + '\n' + Log.getStackTraceString(tr));
         }
 
-        r(mLogFormat.formatLogMessage(Log.WARN, tag, message));
+        r(getFormattedLog(Log.WARN, tag, message));
     }
 
     public static void w(String tag, String message) {
@@ -240,7 +247,7 @@ public class HyperLog {
             Log.e(tag, message + '\n' + Log.getStackTraceString(tr));
         }
 
-        r(mLogFormat.formatLogMessage(Log.ERROR, tag, message));
+        r(getFormattedLog(Log.ERROR, tag, message));
     }
 
     public static void e(String tag, String message) {
@@ -253,8 +260,7 @@ public class HyperLog {
             Log.e(tag, "EXCEPTION: " + getMethodName() + ", " + message + '\n' + Log.getStackTraceString(tr));
             Log.e(tag, "**********************************************");
         }
-
-        r(mLogFormat.formatLogMessage(Log.ERROR, tag, "EXCEPTION: " + getMethodName() + ", " + message));
+        r(getFormattedLog(Log.ERROR, tag, "EXCEPTION: " + getMethodName() + ", " + message));
     }
 
     public static void exception(String tag, String message) {
@@ -269,7 +275,7 @@ public class HyperLog {
     }
 
     public static void a(String message) {
-        r(mLogFormat.formatLogMessage(Log.ASSERT, TAG_ASSERT, message));
+        r(getFormattedLog(Log.ASSERT, TAG_ASSERT, message));
     }
 
     private static String getMethodName() {
@@ -280,13 +286,12 @@ public class HyperLog {
 
 
     private static void r(final String message) {
-
         try {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
                     try {
-                        if (!isInitialize())
+                        if (!isInitialize() || message == null || message.isEmpty())
                             return;
 
                         mDeviceLogList.addDeviceLog(message);
@@ -608,7 +613,7 @@ public class HyperLog {
         while (logsBatchCount != 0) {
 
             final List<DeviceLogModel> deviceLogs = getDeviceLogs(false, logsBatchCount);
-            deviceLogs.add(new DeviceLogModel(mLogFormat.formatLogMessage(Log.INFO, TAG_HYPERLOG, "Log Counts: " +
+            deviceLogs.add(new DeviceLogModel(getFormattedLog(Log.INFO, TAG_HYPERLOG, "Log Counts: " +
                     deviceLogs.size() + " | File Size: " + deviceLogs.toString().length() + " bytes.")));
             //Get string data into byte format.
             byte[] bytes = Utils.getByteData(deviceLogs);
@@ -663,5 +668,12 @@ public class HyperLog {
         if (!isInitialize())
             return;
         mDeviceLogList.clearSavedDeviceLogs();
+    }
+
+    private static String getFormattedLog(int logLevel, String tag, String message) {
+        if (isInitialize()) {
+            return mLogFormat.formatLogMessage(logLevel, tag, message);
+        }
+        return null;
     }
 }
