@@ -151,7 +151,7 @@ public class HyperLog {
 
     /**
      * Call this method to get a end point URL where logs need to be pushed.
-     * */
+     */
     public static String getURL() {
         return URL;
     }
@@ -159,7 +159,7 @@ public class HyperLog {
     /**
      * Call this method to get a expiry time of logs. Expiry Time is in seconds.
      */
-    public static long getExpiryTime(){
+    public static long getExpiryTime() {
         return EXPIRY_TIME;
     }
 
@@ -213,7 +213,7 @@ public class HyperLog {
             Log.i(tag, message + '\n' + Log.getStackTraceString(tr));
         }
 
-        r(mLogFormat.formatLogMessage(Log.INFO,tag, message));
+        r(mLogFormat.formatLogMessage(Log.INFO, tag, message));
     }
 
     /**
@@ -254,7 +254,7 @@ public class HyperLog {
             Log.e(tag, "**********************************************");
         }
 
-        r(mLogFormat.formatLogMessage(Log.ERROR, tag,"EXCEPTION: " + getMethodName() + ", " + message));
+        r(mLogFormat.formatLogMessage(Log.ERROR, tag, "EXCEPTION: " + getMethodName() + ", " + message));
     }
 
     public static void exception(String tag, String message) {
@@ -269,7 +269,7 @@ public class HyperLog {
     }
 
     public static void a(String message) {
-        r(mLogFormat.formatLogMessage(Log.ASSERT, TAG_ASSERT,message));
+        r(mLogFormat.formatLogMessage(Log.ASSERT, TAG_ASSERT, message));
     }
 
     private static String getMethodName() {
@@ -608,7 +608,7 @@ public class HyperLog {
         while (logsBatchCount != 0) {
 
             final List<DeviceLogModel> deviceLogs = getDeviceLogs(false, logsBatchCount);
-            deviceLogs.add(new DeviceLogModel(mLogFormat.formatLogMessage(Log.INFO, TAG_HYPERLOG,"Log Counts: " +
+            deviceLogs.add(new DeviceLogModel(mLogFormat.formatLogMessage(Log.INFO, TAG_HYPERLOG, "Log Counts: " +
                     deviceLogs.size() + " | File Size: " + deviceLogs.toString().length() + " bytes.")));
             //Get string data into byte format.
             byte[] bytes = Utils.getByteData(deviceLogs);
@@ -664,5 +664,4 @@ public class HyperLog {
             return;
         mDeviceLogList.clearSavedDeviceLogs();
     }
-
 }
