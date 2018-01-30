@@ -112,7 +112,6 @@ public class MainActivity extends AppCompatActivity {
         HyperLog.deleteLogs();
         logsList.clear();
         listAdapter.notifyDataSetChanged();
-
     }
 
     public void nextLog(View view) {
@@ -155,6 +154,4 @@ public class MainActivity extends AppCompatActivity {
         toast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
         toast.show();
     }
-
-
 }

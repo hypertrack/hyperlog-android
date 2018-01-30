@@ -30,6 +30,8 @@ import android.util.Log;
 
 import com.hypertrack.hyperlog.utils.HLDateTimeUtility;
 
+import java.io.Serializable;
+
 
 /**
  * Created by Aman on 10/10/17.
@@ -41,7 +43,7 @@ import com.hypertrack.hyperlog.utils.HLDateTimeUtility;
  * An instance of LogFormat needs to be passed to the method
  * {@link HyperLog#setLogFormat(LogFormat)} as parameter.
  */
-public class LogFormat {
+public class LogFormat implements Serializable {
 
     private String deviceUUID;
 
@@ -57,21 +59,21 @@ public class LogFormat {
      * @param message  Log message that need to be customized.
      * @return Formatted Log Message that will store in database.
      */
-    String formatLogMessage(int logLevel, String message) {
+    String formatLogMessage(int logLevel, String tag, String message) {
         String timeStamp = HLDateTimeUtility.getCurrentTime();
         String senderName = BuildConfig.VERSION_NAME;
         String osVersion = "Android-" + Build.VERSION.RELEASE;
         String logLevelName = getLogLevelName(logLevel);
-        return getFormattedLogMessage(logLevelName, message, timeStamp, senderName, osVersion, deviceUUID);
+        return getFormattedLogMessage(logLevelName, tag, message, timeStamp, senderName, osVersion, deviceUUID);
     }
 
-    public String getFormattedLogMessage(String logLevelName, String message, String timeStamp,
+    public String getFormattedLogMessage(String logLevelName, String tag, String message, String timeStamp,
                                          String senderName, String osVersion, String deviceUUID) {
         if (deviceUUID == null) {
             deviceUUID = "DeviceUUID";
         }
 
-        return timeStamp + " | " + senderName + " : " + osVersion + " | " + deviceUUID + " | " + "[" + logLevelName + "]" + ": " + message;
+        return timeStamp + " | " + senderName + " : " + osVersion + " | " + deviceUUID + " | " + "[" + logLevelName + "/" + tag + "]: " + message;
     }
 
     private static String getLogLevelName(int messageLogLevel) {

@@ -27,6 +27,7 @@ package com.hypertrack.hyperlog;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.util.List;
 
@@ -65,13 +66,13 @@ class DeviceLogDatabaseHelper extends SQLiteOpenHelper implements DeviceLogDataS
     @Override
     public void onCreate(SQLiteDatabase db) {
         DeviceLogTable.onCreate(db);
-        HyperLog.i(TAG, "DeviceLogDatabaseHelper onCreate called.");
+        Log.d(TAG, "DeviceLogDatabaseHelper onCreate called.");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         DeviceLogTable.onUpgrade(db, oldVersion, newVersion);
-        HyperLog.i(TAG, "DeviceLogDatabaseHelper onUpgrade called.");
+        Log.d(TAG, "DeviceLogDatabaseHelper onUpgrade called.");
     }
 
     @Override
