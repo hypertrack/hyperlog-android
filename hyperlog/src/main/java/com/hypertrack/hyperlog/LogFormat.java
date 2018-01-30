@@ -30,6 +30,8 @@ import android.util.Log;
 
 import com.hypertrack.hyperlog.utils.HLDateTimeUtility;
 
+import java.io.Serializable;
+
 
 /**
  * Created by Aman on 10/10/17.
@@ -41,7 +43,7 @@ import com.hypertrack.hyperlog.utils.HLDateTimeUtility;
  * An instance of LogFormat needs to be passed to the method
  * {@link HyperLog#setLogFormat(LogFormat)} as parameter.
  */
-public class LogFormat {
+public class LogFormat implements Serializable {
 
     private String deviceUUID;
 
@@ -71,7 +73,7 @@ public class LogFormat {
             deviceUUID = "DeviceUUID";
         }
 
-        return timeStamp + " | " + senderName + " : " + osVersion + " | " + deviceUUID + " | " + "[" + logLevelName +"/" +tag+ "]: " + message;
+        return timeStamp + " | " + senderName + " : " + osVersion + " | " + deviceUUID + " | " + "[" + logLevelName + "/" + tag + "]: " + message;
     }
 
     private static String getLogLevelName(int messageLogLevel) {

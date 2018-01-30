@@ -25,11 +25,14 @@ SOFTWARE.
 package com.hypertrack.hyperlog.utils;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.provider.Settings;
 import android.text.TextUtils;
 
+import com.google.gson.GsonBuilder;
 import com.hypertrack.hyperlog.DeviceLogModel;
 import com.hypertrack.hyperlog.HyperLog;
+import com.hypertrack.hyperlog.LogFormat;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -46,6 +49,8 @@ import static android.content.ContentValues.TAG;
 
 public class Utils {
 
+    private static final String HL_SHARED_PREFS_KEY = "com.hyperlog:SharedPreference";
+    private static final String HL_LOG_FORMAT_KEY = "com.hyperlog:LogFormat";
     private static final double MEGA = (Math.pow(1024, 2));
 
     public static File writeStringsToFile(Context context, List<String> data, String fileName) {
@@ -67,7 +72,7 @@ public class Utils {
             }
             //Create a new file with file name
             File logFile = new File(filePath, fileName);
-            FileWriter writer = new FileWriter(logFile,true);
+            FileWriter writer = new FileWriter(logFile, true);
             BufferedWriter bufferedWriter = new BufferedWriter(writer, 4 * (int) MEGA);
             write(data, bufferedWriter);
 
@@ -98,5 +103,34 @@ public class Utils {
             stringBuilder.append(deviceLog.getDeviceLog()).append("\n");
         }
         return stringBuilder.toString().getBytes();
+    }
+
+    public static void saveLogFormat(Context context, LogFormat logFormat) {
+        SharedPreferences.Editor editor = getSharedPreferencesEditor(context);
+        editor.putString(HL_LOG_FORMAT_KEY, new GsonBuilder().create().toJson(logFormat));
+        editor.apply();
+    }
+
+    public static LogFormat getLogFormat(Context context) {
+        SharedPreferences sharedPreferences = getSharedPreferences(context);
+        String json = sharedPreferences.getString(HL_LOG_FORMAT_KEY, null);
+
+        if (json == null)
+            return new LogFormat(context);
+
+        LogFormat logFormat = new GsonBuilder().create().fromJson(json, LogFormat.class);
+
+        if (logFormat == null)
+            return new LogFormat(context);
+        else
+            return logFormat;
+    }
+
+    private static SharedPreferences getSharedPreferences(Context context) {
+        return context.getSharedPreferences(HL_SHARED_PREFS_KEY, Context.MODE_PRIVATE);
+    }
+
+    private static SharedPreferences.Editor getSharedPreferencesEditor(Context context) {
+        return getSharedPreferences(context).edit();
     }
 }
