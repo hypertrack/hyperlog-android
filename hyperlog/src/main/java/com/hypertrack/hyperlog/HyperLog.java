@@ -40,6 +40,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by Aman on 04/10/17.
@@ -57,6 +59,7 @@ public class HyperLog {
     private static final int EXPIRY_TIME = 7 * 24 * 60 * 60;// 7 Days
     private static LogFormat mLogFormat;
     private static Context context;
+    private static ExecutorService executorService;
 
     /**
      * Call this method to initialize HyperLog.
@@ -103,7 +106,6 @@ public class HyperLog {
      * @see #initialize(Context)
      */
     public static void initialize(@NonNull Context context, int expiryTimeInSeconds, @NonNull LogFormat logFormat) {
-
 
         if (context == null)
             Log.e(TAG, "HyperLog isn't initialized: Context couldn't be null");
@@ -287,7 +289,11 @@ public class HyperLog {
 
     private static void r(final String message) {
         try {
-            new Thread(new Runnable() {
+
+            if (executorService == null)
+                executorService = Executors.newSingleThreadExecutor();
+
+            Runnable runnable = new Runnable() {
                 @Override
                 public void run() {
                     try {
@@ -299,7 +305,10 @@ public class HyperLog {
                         ex.printStackTrace();
                     }
                 }
-            }).start();
+            };
+
+            executorService.submit(runnable);
+
         } catch (OutOfMemoryError | Exception e) {
             e.printStackTrace();
         }
