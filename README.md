@@ -286,15 +286,14 @@ HyperLog.getDeviceLogs(boolean deleteLogs, int batchNo);
 Please use the [issues tracker](https://github.com/hypertrack/hyperlog-android/issues) to raise bug reports and feature requests. We'd love to see your pull requests, so send them in!
 
 ## About HyperTrack
-Developers use [HyperTrack](https://www.hypertrack.com) to build location features, not infrastructure. We reduce the complexity of building and operating location features to a few APIs that just work.
-Check it out. [Sign up](https://dashboard.hypertrack.com/signup/) and start building! Join our [Slack community](http://slack.hypertrack.io) for instant responses. You can also email us at help@hypertrack.io
+Developers use [HyperTrack](https://www.hypertrack.com?utm_source=github&utm_campaign=hyperlog_android) to build location features, not infrastructure. We reduce the complexity of building and operating location features to a few APIs that just work. [Sign up](https://www.hypertrack.com/signup?utm_source=github&utm_campaign=hyperlog_android) and start building! Join our [Slack community](http://slack.hypertrack.com) to connect with other developers building location features. Email us at help@hypertrack.com if you need any help.
 
 ## License
 
 ```
 MIT License
 
-Copyright (c) 2016 HyperTrack
+Copyright (c) 2018 HyperTrack
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
