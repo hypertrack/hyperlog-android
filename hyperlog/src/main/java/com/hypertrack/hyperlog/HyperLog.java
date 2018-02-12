@@ -109,8 +109,10 @@ public class HyperLog {
     public static void initialize(@NonNull Context context, int expiryTimeInSeconds,
                                   @NonNull LogFormat logFormat) {
 
-        if (context == null)
+        if (context == null) {
             Log.e(TAG, "HyperLog isn't initialized: Context couldn't be null");
+            return;
+        }
 
         HyperLog.context = context.getApplicationContext();
 
@@ -289,7 +291,6 @@ public class HyperLog {
         StackTraceElement e = stacktrace[1];//coz 0th will be getStackTrace so 1st
         return e.getMethodName();
     }
-
 
     private static void r(final String message) {
         try {
@@ -619,7 +620,7 @@ public class HyperLog {
             return;
 
         if (TextUtils.isEmpty(URL)) {
-            HyperLog.e(TAG,"API endpoint URL is missing. Set URL using " +
+            HyperLog.e(TAG, "API endpoint URL is missing. Set URL using " +
                     "HyperLog.setURL method");
             return;
         }
@@ -679,7 +680,7 @@ public class HyperLog {
                             temp[0]--;
                             error.printStackTrace();
                             HyperLog.exception(TAG, "Error has occurred while pushing " +
-                                            "logs: ", error);
+                                    "logs: ", error);
 
                             if (temp[0] == 0) {
                                 if (callback != null) {
