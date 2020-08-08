@@ -14,6 +14,7 @@
     * [Example Testing Endpoint inside Django](#setup-example-endpoint-inside-django)
 * [Custom Log Message Format](#custom-log-message-format)
 * [Additional Methods](#additional-methods)
+* [Documentation(Kotlin/Android)](#documentation-for-android-using-kotlin)
 * [Contribute](#contribute)
 * [About HyperTrack](#about-hypertrack)
 * [License](#license)
@@ -281,6 +282,9 @@ HyperLog.getDeviceLogs(boolean deleteLogs, int batchNo);
 ```
 * Get the number of batches using `HyperLog.getDeviceLogBatchCount`.
 * Developer can manually delete the logs using `HyperLog.deleteLogs`.
+
+## Documentation For Android using Kotlin
+Read the different methods and how to implement HyperLogs in Android using Kotlin [here](https://medium.com/better-programming/how-to-implement-hyperlog-with-kotlin-in-android-21f34a950c83?source=friends_link&sk=53464e017b4a5db6a81a586e61b03e43).
 
 ## Contribute
 Please use the [issues tracker](https://github.com/hypertrack/hyperlog-android/issues) to raise bug reports and feature requests. We'd love to see your pull requests, so send them in!
