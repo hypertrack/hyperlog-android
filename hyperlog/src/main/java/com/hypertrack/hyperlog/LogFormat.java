@@ -28,6 +28,7 @@ import android.os.Build;
 import android.provider.Settings;
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.hypertrack.hyperlog.utils.HLDateTimeUtility;
 
 import java.io.Serializable;
@@ -45,11 +46,12 @@ import java.io.Serializable;
  */
 public class LogFormat implements Serializable {
 
-    private String deviceUUID;
+    private final String deviceUUID;
 
     public LogFormat(Context context) {
         Context mContext = context.getApplicationContext();
-        deviceUUID = Settings.Secure.getString(mContext.getContentResolver(), Settings.Secure.ANDROID_ID);
+        String uuid = Settings.Secure.getString(mContext.getContentResolver(), Settings.Secure.ANDROID_ID);
+        deviceUUID = uuid == null ? "UnknownUUID": uuid;
     }
 
     /**
@@ -69,11 +71,8 @@ public class LogFormat implements Serializable {
 
     public String getFormattedLogMessage(String logLevelName, String tag, String message, String timeStamp,
                                          String senderName, String osVersion, String deviceUUID) {
-        if (deviceUUID == null) {
-            deviceUUID = "DeviceUUID";
-        }
-
-        return timeStamp + " | " + senderName + " : " + osVersion + " | " + deviceUUID + " | " + "[" + logLevelName + "/" + tag + "]: " + message;
+        LogData data = new LogData(logLevelName, tag, message, timeStamp, senderName, osVersion, deviceUUID);
+        return new Gson().toJson(data);
     }
 
     private static String getLogLevelName(int messageLogLevel) {
