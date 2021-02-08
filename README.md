@@ -68,6 +68,24 @@ dependencies {
 }
 ```
 
+Don't forget to add also the following dependencies
+
+```
+
+    compile 'com.android.volley:volley:1.0.0'
+    compile 'com.google.code.gson:gson:2.8.1'
+   
+```
+and the following permession to AndroidManifest.xml
+
+```
+
+     <uses-permission android:name="android.permission.INTERNET" />
+   
+```
+
+
+
 ## Initialize
 Inside `onCreate` of Application class or Launcher Activity. 
 ```
