@@ -39,6 +39,25 @@ timeStamp + " | " + appVersion + " : " + osVersion + " | " + deviceUUID + " | ["
 Download the latest version or grab via Gradle.
 
 The library is available on [`mavenCentral()`](https://dl.bintray.com/piyushgupta27/maven/com/hypertrack/hyperlog/) and [`jcenter()`](http://jcenter.bintray.com/com/hypertrack/hyperlog/). In your module's `build.gradle`, add the following code snippet and run the `gradle-sync`.
+from rest_framework import views
+
+class SDKLogFileAPIView(views.APIView):
+    '''
+    SDK Log endpoint for file uploads
+
+    Example curl call:
+    curl -i -X POST
+            -H "Content-Type: multipart/form-data"
+            -H "Authorization: token pk_e6c9cf663714fb4b96c12d265df554349e0db79b"
+            -H "Content-Disposition: attachment; filename=upload.txt"
+            -F "data=@/Users/Arjun/Desktop/filename.txt"
+            localhost:8000/api/v1/logs/
+    '''
+    parser_classes = (
+        parsers.FileUploadParser,
+    )
+
+    def post(self, request):
 
 
 ```
@@ -114,7 +133,21 @@ HyperLog.pushLogs(this, false, new HLCallback() {
 The example code below will set you up with a view that can handle uploaded log files, decompress gzip, and print the contents of the file.
 
 ```python
-from rest_framework import views
+import zlib
+
+from backend_apps.hyperlogs.models import HyperLog
+
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO
+import logging
+
+logging.basicConfig()
+logger = logging.getLogger(__name__)
+
+from rest_framework import views, parsers
+from rest_framework.response import Response
 
 class SDKLogFileAPIView(views.APIView):
     '''
@@ -156,18 +189,22 @@ class SDKLogFileAPIView(views.APIView):
         if not self.request.META.get('HTTP_CONTENT_ENCODING') == 'gzip':
             return self.handle_uploaded_file(f)
 
-        result = StringIO.StringIO()
+        result = StringIO()
 
         for chunk in f.chunks():
+            chunk = str(chunk, errors='ignore')
             result.write(chunk)
 
         stringified_value = result.getvalue()
         result.close()
         decompressor = zlib.decompressobj(16 + zlib.MAX_WBITS)
+        stringified_value = str.encode(stringified_value)
+        logger.error('=================hyperlog=============')
+        logger.error(stringified_value)
         decompressed = decompressor.decompress(stringified_value)
 
         for line in decompressed.split('\n'):
-            print line
+            print (line)
 
     def handle_uploaded_file(self, f):
         '''
@@ -175,10 +212,15 @@ class SDKLogFileAPIView(views.APIView):
         can pick it up.
         '''
         for chunk in f.chunks():
+            logger.error("================================hyperlog======================")
+            logger.error(chunk)
+            chunk = chunk.decode()
             lines = chunk.split('\n')
-
+            logs=[]
             for line in lines:
-                print line
+                print (line)
+                logs.append(line)
+            HyperLog.objects.create(log=logs)
 ```
 
 
