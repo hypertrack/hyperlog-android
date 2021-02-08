@@ -22,16 +22,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-/**
- * Created by Aman on 04/10/17.
- */
 
 package com.hypertrack.hyperlog;
 
 import android.content.Context;
 import android.os.Build;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
 import com.android.volley.Request;
@@ -48,7 +44,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -60,12 +55,12 @@ class HLHTTPMultiPartPostRequest<T> extends Request<T> {
     private static final String TAG = HLHTTPMultiPartPostRequest.class.getSimpleName();
     private final Gson mGson;
     private final Class<T> mResponseType;
-    private final WeakReference<Response.Listener<T>> mListener;
+    private final Response.Listener<T> mListener;
 
-    private Context context;
-    private byte[] multiPartRequestBody;
-    private String filename;
-    private String packageName;
+    private final Context context;
+    private final byte[] multiPartRequestBody;
+    private final String filename;
+    private final String packageName;
 
     private final HashMap<String, String> additionalHeaders;
     private static final String HEADER_ENCODING = "Content-Encoding";
@@ -86,7 +81,7 @@ class HLHTTPMultiPartPostRequest<T> extends Request<T> {
             this.multiPartRequestBody = multiPartRequestBody;
         this.filename = filename;
         this.mResponseType = responseType;
-        this.mListener = new WeakReference<>(listener);
+        this.mListener = listener;
         this.mGson = CustomGson.gson();
         this.additionalHeaders = additionalHeaders;
         packageName = context.getPackageName();
@@ -106,10 +101,10 @@ class HLHTTPMultiPartPostRequest<T> extends Request<T> {
                 return compressed;
 
             } catch (Exception exception) {
-                HyperLog.e(TAG, "Exception occurred while getCompressed: " + exception);
+                HyperLog.e("HYPERLOG", "Exception occurred while getCompressed: " + exception);
                 mGzipEnabled = false;
             } catch (OutOfMemoryError error) {
-                HyperLog.e(TAG, "OutOfMemory Error occurred while getCompressed: " + error);
+                HyperLog.e("HYPERLOG", "OutOfMemory Error occurred while getCompressed: " + error);
                 mGzipEnabled = false;
             }
         }
@@ -120,14 +115,14 @@ class HLHTTPMultiPartPostRequest<T> extends Request<T> {
     private byte[] getRequestBody(byte[] requestBody) {
         byte[] compressedRequestBody = getCompressed(requestBody);
         if (mGzipEnabled) {
-            HyperLog.i(TAG, "Compressed FileSize: " + compressedRequestBody.length + " Bytes");
+            HyperLog.i("HYPERLOG", "Compressed FileSize: " + compressedRequestBody.length + " Bytes");
             return compressedRequestBody;
         } else {
             try {
-                HyperLog.i(TAG, "Compressed FileSize: " + requestBody.length + " Bytes");
+                HyperLog.i("HYPERLOG", "Compressed FileSize: " + requestBody.length + " Bytes");
                 return requestBody;
             } catch (Exception exception) {
-                HyperLog.e(TAG, "Exception occurred while getRequestBody: " + exception);
+                HyperLog.e("HYPERLOG", "Exception occurred while getRequestBody: " + exception);
             }
         }
         return null;
@@ -156,13 +151,13 @@ class HLHTTPMultiPartPostRequest<T> extends Request<T> {
             is.close();
             return string.toString();
         } catch (Exception exception) {
-            HyperLog.e(TAG, "Exception occurred while getDecompressed: " + exception);
+            HyperLog.e("HYPERLOG", "Exception occurred while getDecompressed: " + exception);
         }
         return null;
     }
 
     @Override
-    public Map<String, String> getHeaders() throws AuthFailureError {
+    public Map<String, String> getHeaders() {
 
         Map<String, String> params = new HashMap<>();
         params.put("User-Agent", context.getPackageName() + " (Android " + Build.VERSION.RELEASE + ")");
@@ -196,11 +191,11 @@ class HLHTTPMultiPartPostRequest<T> extends Request<T> {
             String json = new String(
                     volleyError.networkResponse.data, HttpHeaderParser.parseCharset(volleyError.networkResponse.headers));
 
-            HyperLog.i(TAG, "Status Code: " + volleyError.networkResponse.statusCode +
+            HyperLog.i("HYPERLOG", "Status Code: " + volleyError.networkResponse.statusCode +
                     " Data: " + json);
 
         } catch (Exception e) {
-            HyperLog.e(TAG, "Exception occurred while HTTPPatchRequest parseNetworkError: " + e, e);
+            HyperLog.e("HYPERLOG", "Exception occurred while HTTPPatchRequest parseNetworkError: " + e, e);
         }
 
         return super.parseNetworkError(volleyError);
@@ -224,9 +219,9 @@ class HLHTTPMultiPartPostRequest<T> extends Request<T> {
 
     @Override
     protected void deliverResponse(T response) {
-        HyperLog.i(TAG, "deliverResponse: ");
-        if (mListener != null && mListener.get() != null)
-            mListener.get().onResponse(response);
+        HyperLog.i("HYPERLOG", "deliverResponse: ");
+        if (mListener != null)
+            mListener.onResponse(response);
     }
 
     @Override
