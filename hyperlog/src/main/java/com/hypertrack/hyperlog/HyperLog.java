@@ -202,7 +202,7 @@ public class HyperLog {
         if (Log.VERBOSE >= logLevel) {
             Log.v(tag, message + '\n' + Log.getStackTraceString(tr));
         }
-        r(getFormattedLog(logLevel, tag, message));
+        r(getFormattedLog(Log.VERBOSE, tag, message));
     }
 
     public static void v(String tag, String message) {
@@ -213,7 +213,7 @@ public class HyperLog {
         if (Log.DEBUG >= logLevel) {
             Log.d(tag, message + '\n' + Log.getStackTraceString(tr));
         }
-        r(getFormattedLog(logLevel, tag, message));
+        r(getFormattedLog(Log.DEBUG, tag, message));
 
     }
 
