@@ -167,6 +167,19 @@ class HLHTTPMultiPartPostRequest<T> extends Request<T> {
         //Header for file upload
         params.put("Content-Disposition", "attachment; filename=" + filename);
 
+        try {
+            URL url = new URL(this.getUrl());
+            final String authority = url.getUserInfo();
+
+            if (authority != null) {
+                String auth = "Basic " + Base64.getEncoder().encodeToString(authority.getBytes());
+                params.put("Authorization", auth);
+            }
+        } catch(Exception e) {
+            // FIXME: Do something saner with this
+            System.out.println("url parsing failure");
+        }
+
         if (mGzipEnabled) {
             params.put(HEADER_ENCODING, ENCODING_GZIP);
         }
