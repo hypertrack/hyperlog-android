@@ -1,7 +1,6 @@
 # HyperLog Android
 
 [![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://opensource.org/licenses/MIT) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[ ![Download](https://api.bintray.com/packages/piyushgupta27/maven/hyperlog/images/download.svg) ](https://bintray.com/piyushgupta27/maven/hyperlog/_latestVersion)
 
 * [Overview](#overview)
 * [Log format](#log-format)
@@ -104,7 +103,7 @@ File file = HyperLog.getDeviceLogsInFile(this);
 ```
 
 ## Push Logs Files to Remote Server
-Logs file can be pushed to your remote server or `RequestBin`(for testing) or to [`Logstash`](https://www.elastic.co/products/logstash).
+Logs file can be pushed to your remote server or [`RequestBin`](https://requestb.in/)(for testing) or to [`Logstash`](https://www.elastic.co/products/logstash).
 
 **Steps:**
 
